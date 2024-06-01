@@ -5,7 +5,7 @@ import "fmt"
 
 templ CurrentWeather(city string, current *weather.CurrentWeather) {
 	// TODO: change trigger to "every 10min" or more (API quotas)
-	<div hx-get={ fmt.Sprintf("/api/weather/current?city=%s", city) } hx-trigger="load, every 10s" hx-swap="innerHTML">
+	<div hx-get={ fmt.Sprintf("/api/weather/current?city=%s", city) } hx-trigger="load, every 600s" hx-swap="innerHTML">
 		@CurrentWeatherComp(city, current)
 	</div>
 }
