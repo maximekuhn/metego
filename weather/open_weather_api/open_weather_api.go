@@ -30,7 +30,10 @@ func (f *OpenWeatherFetcher) FetchCurrent(city string) (*weather.CurrentWeather,
 	}
 
 	current := weather.CurrentWeather{
-		Temp: curr.Main.Temp,
+		Temp:      curr.Main.Temp,
+		FeelsLike: curr.Main.FeelsLike,
+		Pressure:  curr.Main.Pressure,
+		Humidity:  curr.Main.Humidity,
 	}
 
 	return &current, nil

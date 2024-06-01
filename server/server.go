@@ -18,7 +18,7 @@ func NewServer(fetcher weather.Fetcher) *Server {
 
 func (s *Server) Start() error {
 	http.HandleFunc("GET /weather/{city}", s.weatherHandler)
-	http.HandleFunc("GET /api/weather/current", s.currentWeatherHandler)
+	http.HandleFunc("GET /api/weather/current/", s.currentWeatherHandler)
 	err := http.ListenAndServe(":9004", nil)
 	return err
 }

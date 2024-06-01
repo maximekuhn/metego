@@ -7,7 +7,10 @@ type owCurrent struct {
 
 // open weather API current main
 type owCurrentMain struct {
-	Temp float64 `json:"temp"`
+	Temp      float64 `json:"temp"`
+	FeelsLike float64 `json:"feels_like"`
+	Pressure  float64 `json:"pressure"`
+	Humidity  float64 `json:"humidity"`
 }
 
 // open weather API city coordinates

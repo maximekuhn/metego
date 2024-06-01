@@ -4,6 +4,7 @@ import "github.com/maximekuhn/metego/weather"
 import "fmt"
 
 templ CurrentWeather(city string, current *weather.CurrentWeather) {
+	// TODO: change trigger to "every 10min" or more (API quotas)
 	<div hx-get={ fmt.Sprintf("/api/weather/current?city=%s", city) } hx-trigger="load, every 10s" hx-swap="innerHTML">
 		@CurrentWeatherComp(city, current)
 	</div>
@@ -12,11 +13,17 @@ templ CurrentWeather(city string, current *weather.CurrentWeather) {
 templ CurrentWeatherComp(city string, current *weather.CurrentWeather) {
 	if current != nil {
 		<div>
-			<p>current temperature for { city }: { fmt.Sprintf("%.2f", current.Temp) }°C</p>
+			<h1>{ city }</h1>
+			<ul>
+				<li>temperature: { fmt.Sprintf("%.2f", current.Temp) } °C</li>
+				<li>feels like: { fmt.Sprintf("%.2f", current.FeelsLike) } %</li>
+				<li>pressure: { fmt.Sprintf("%.2f", current.Pressure) } hPa</li>
+				<li>humidity: { fmt.Sprintf("%.2f", current.Humidity) } %</li>
+			</ul>
 		</div>
 	} else {
 		<div>
-			<p>no temperature found for { city }</p>
+			<p>could not get current weather for { city }</p>
 		</div>
 	}
 }
