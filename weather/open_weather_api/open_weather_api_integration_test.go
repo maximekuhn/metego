@@ -136,7 +136,7 @@ func nearlyEquals(a, b, precision float64) bool {
 	return math.Abs(a-b) < precision
 }
 
-func setup() (*openWeatherFetcher, error) {
+func setup() (*OpenWeatherFetcher, error) {
 	err := godotenv.Load("../../.env.integration")
 	if err != nil {
 		return nil, err
@@ -147,5 +147,5 @@ func setup() (*openWeatherFetcher, error) {
 		return nil, errors.New("OPEN_WEATHER_API_KEY is not set")
 	}
 
-	return newOpenWeatherFetcher(openWeatherApiKey), nil
+	return NewOpenWeatherFetcher(openWeatherApiKey), nil
 }

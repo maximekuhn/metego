@@ -9,8 +9,17 @@ fmt:
 test_integration:
 	go test -tags=integration -v ./...
 
+build:
+	go build -v -o bin/cli cmd/cli/main.go
+
+clean:
+	go clean
+	rm -rf ./bin
+
 help:
 	@echo "Available targets"
 	@echo "fmtCheck         - Check if code is correctly formatted"
 	@echo "fmt              - Format code"
 	@echo "test_integration - Run all integration tests"
+	@echo "build            - Build all binaries"
+	@echo "clean            - Clean up bin/ directory"
