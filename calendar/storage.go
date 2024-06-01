@@ -16,4 +16,7 @@ type BirthdayStorage interface {
 
 	// get all birthdays given the current date
 	GetAllForDate(month time.Month, day uint8) ([]*Birthday, error)
+
+    // get all birthdays
+    GetAll(limit, offset int) ([]*Birthday, error)
 }

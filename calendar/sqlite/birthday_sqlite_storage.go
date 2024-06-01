@@ -53,6 +53,34 @@ func (s *SQLiteBdayStorage) GetAllForDate(month time.Month, day uint8) ([]*calen
 	}
 	defer rows.Close()
 
+	bdays, err := convertRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	return bdays, nil
+}
+
+func (s *SQLiteBdayStorage) GetAll(limit, offset int) ([]*calendar.Birthday, error) {
+	rows, err := s.db.Query(
+		"SELECT name, date FROM birthdays LIMIT ? OFFSET ?",
+		limit,
+		offset,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	bdays, err := convertRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	return bdays, nil
+}
+
+func convertRows(rows *sql.Rows) ([]*calendar.Birthday, error) {
 	bdays := make([]*calendar.Birthday, 0)
 	for rows.Next() {
 		var name string
@@ -82,6 +110,5 @@ func (s *SQLiteBdayStorage) GetAllForDate(month time.Month, day uint8) ([]*calen
 		bday := calendar.NewBirthday(name, time.Month(m), uint8(d))
 		bdays = append(bdays, bday)
 	}
-
 	return bdays, nil
 }

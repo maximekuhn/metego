@@ -5,3 +5,6 @@
 
 # binaries
 bin/
+
+# sqlite3 db
+metego.sqlite3
