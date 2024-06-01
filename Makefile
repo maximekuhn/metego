@@ -10,12 +10,10 @@ test_integration:
 	go test -tags=integration -v ./...
 
 build: templ
-	go build -v -o bin/cli cmd/cli/main.go
 	go build -v -o bin/web cmd/web/main.go
 
 build_rpi:
-	GOOS=linux GOARCH=arm GOARM=7 go build -v -o bin/rpi/cli cmd/cli/main.go
-	GOOS=linux GOARCH=arm GOARM=7 go build -v -o bin/rpi/web cmd/web/main.go
+	GOOS=linux GOARCH=arm GOARM=7 CGO_ENABLED=1 CC=arm-linux-gnueabihf-gcc CXX=arm-linux-gnueabihf-g++ go build -v -o bin/rpi/web cmd/web/main.go
 
 clean:
 	go clean
