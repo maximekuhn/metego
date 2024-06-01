@@ -16,6 +16,9 @@ clean:
 	go clean
 	rm -rf ./bin
 
+lint:
+	golangci-lint run
+
 help:
 	@echo "Available targets"
 	@echo "fmtCheck         - Check if code is correctly formatted"
@@ -23,3 +26,4 @@ help:
 	@echo "test_integration - Run all integration tests"
 	@echo "build            - Build all binaries"
 	@echo "clean            - Clean up bin/ directory"
+	@echo "lint             - Run linter"
