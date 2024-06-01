@@ -12,8 +12,8 @@ test_integration:
 build: templ
 	go build -v -o bin/web cmd/web/main.go
 
-build_rpi:
-	GOOS=linux GOARCH=arm GOARM=7 CGO_ENABLED=1 CC=arm-linux-gnueabihf-gcc CXX=arm-linux-gnueabihf-g++ go build -v -o bin/rpi/web cmd/web/main.go
+build_rpi: templ
+	./build/build_rpi.sh
 
 clean:
 	go clean
@@ -31,7 +31,7 @@ help:
 	@echo "fmt              - Format code"
 	@echo "test_integration - Run all integration tests"
 	@echo "build            - Build all binaries"
-	@echo "build_rpi        - Build all binaries for Raspberry Pi (ARMv7)"
+	@echo "build_rpi        - Build all binaries for Raspberry Pi (ARMv7) // REQUIRES DOCKER"
 	@echo "clean            - Clean up bin/ directory"
 	@echo "lint             - Run linter"
 	@echo "templ            - Generate all templ components"

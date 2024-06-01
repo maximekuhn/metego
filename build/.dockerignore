@@ -1,0 +1,6 @@
+.git
+.env*
+*.sqlite3
+*_test.go
+bin
+build
