@@ -1,6 +1,7 @@
 # dotenv files
 .env.integration
 .env.cli
+.env
 
 # binaries
 bin/
