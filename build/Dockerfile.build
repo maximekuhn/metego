@@ -18,4 +18,4 @@ ENV CGO_ENABLED 1
 ENV CC arm-linux-gnueabihf-gcc
 ENV CXX arm-linux-gnueabihf-g++
 
-RUN go build -v -o bin/web cmd/web/main.go
+RUN go build -ldflags "-linkmode external -extldflags -static" -v -o bin/web cmd/web/main.go
