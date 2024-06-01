@@ -1,0 +1,14 @@
+package views
+
+templ Weather(city string) {
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<title>METEGO</title>
+			<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+		</head>
+		<body>
+			@CurrentWeather(city, nil)
+		</body>
+	</html>
+}

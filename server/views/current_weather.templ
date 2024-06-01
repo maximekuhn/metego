@@ -4,9 +4,15 @@ import "github.com/maximekuhn/metego/weather"
 import "fmt"
 
 templ CurrentWeather(city string, current *weather.CurrentWeather) {
+	<div hx-get={ fmt.Sprintf("/api/weather/current?city=%s", city) } hx-trigger="load, every 10s" hx-swap="innerHTML">
+		@CurrentWeatherComp(city, current)
+	</div>
+}
+
+templ CurrentWeatherComp(city string, current *weather.CurrentWeather) {
 	if current != nil {
 		<div>
-			<p>current temperature for { city }: { fmt.Sprintf("%.2f°C", current.Temp) }°C</p>
+			<p>current temperature for { city }: { fmt.Sprintf("%.2f", current.Temp) }°C</p>
 		</div>
 	} else {
 		<div>
