@@ -21,8 +21,8 @@ func NewServer(fetcher weather.Fetcher) *Server {
 func (s *Server) Start() error {
 	http.HandleFunc("GET /weather/{city}", s.weatherHandler)
 	http.HandleFunc("GET /api/weather/current/", s.currentWeatherHandler)
-	http.ListenAndServe(":9004", nil)
-	return nil
+	err := http.ListenAndServe(":9004", nil)
+	return err
 }
 
 func (s *Server) weatherHandler(w http.ResponseWriter, r *http.Request) {
@@ -31,7 +31,10 @@ func (s *Server) weatherHandler(w http.ResponseWriter, r *http.Request) {
 	weatherPage := views.Weather(city)
 
 	w.Header().Add("Content-Type", "text/html")
-	weatherPage.Render(r.Context(), w)
+	err := weatherPage.Render(r.Context(), w)
+	if err != nil {
+		slog.Error("failed to render Weather", slog.String("err_msg", err.Error()))
+	}
 }
 
 func (s *Server) currentWeatherHandler(w http.ResponseWriter, r *http.Request) {
@@ -47,5 +50,8 @@ func (s *Server) currentWeatherHandler(w http.ResponseWriter, r *http.Request) {
 
 	currentWeatherComp := views.CurrentWeatherComp(city, currentWeather)
 	w.Header().Add("Content-Type", "text/html")
-	currentWeatherComp.Render(r.Context(), w)
+	err = currentWeatherComp.Render(r.Context(), w)
+	if err != nil {
+		slog.Error("failed to render CurrentWeatherComp", slog.String("err_msg", err.Error()))
+	}
 }

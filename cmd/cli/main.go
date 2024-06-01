@@ -34,7 +34,7 @@ func main() {
 			continue
 		}
 
-		fmt.Printf("Current temperature for %s: %.2f°C\n", city,curr.Temp)
+		fmt.Printf("Current temperature for %s: %.2f°C\n", city, curr.Temp)
 
 		time.Sleep(10 * time.Second)
 	}
