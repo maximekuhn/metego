@@ -1,6 +1,6 @@
 //go:build integration
 
-package weather
+package openweatherapi
 
 import (
 	"errors"
@@ -137,7 +137,7 @@ func nearlyEquals(a, b, precision float64) bool {
 }
 
 func setup() (*openWeatherFetcher, error) {
-	err := godotenv.Load("../.env.integration")
+	err := godotenv.Load("../../.env.integration")
 	if err != nil {
 		return nil, err
 	}

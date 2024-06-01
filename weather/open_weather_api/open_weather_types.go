@@ -1,4 +1,4 @@
-package weather
+package openweatherapi
 
 // open weather API current
 type owCurrent struct {

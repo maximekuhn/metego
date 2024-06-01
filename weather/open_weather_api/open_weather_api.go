@@ -1,4 +1,4 @@
-package weather
+package openweatherapi
 
 import (
 	"encoding/json"
