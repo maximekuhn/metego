@@ -9,8 +9,13 @@ fmt:
 test_integration:
 	go test -tags=integration -v ./...
 
-build:
+build: templ
 	go build -v -o bin/cli cmd/cli/main.go
+	go build -v -o bin/web cmd/web/main.go
+
+build_rpi:
+	GOOS=linux GOARCH=arm GOARM=7 go build -v -o bin/rpi/cli cmd/cli/main.go
+	GOOS=linux GOARCH=arm GOARM=7 go build -v -o bin/rpi/web cmd/web/main.go
 
 clean:
 	go clean
@@ -19,11 +24,16 @@ clean:
 lint:
 	golangci-lint run
 
+templ:
+	templ generate
+
 help:
 	@echo "Available targets"
 	@echo "fmtCheck         - Check if code is correctly formatted"
 	@echo "fmt              - Format code"
 	@echo "test_integration - Run all integration tests"
 	@echo "build            - Build all binaries"
+	@echo "build_rpi        - Build all binaries for Raspberry Pi (ARMv7)"
 	@echo "clean            - Clean up bin/ directory"
 	@echo "lint             - Run linter"
+	@echo "templ            - Generate all templ components"

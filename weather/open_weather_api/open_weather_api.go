@@ -11,6 +11,8 @@ import (
 
 type OpenWeatherFetcher struct {
 	apiKey string
+
+    // TODO: prevent data races (mutex or rw lock)
 	cities map[string]*owCityCoords
 }
 

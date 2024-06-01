@@ -1,0 +1,16 @@
+package views
+
+import "github.com/maximekuhn/metego/weather"
+import "fmt"
+
+templ CurrentWeather(city string, current *weather.CurrentWeather) {
+	if current != nil {
+		<div>
+			<p>current temperature for { city }: { fmt.Sprintf("%.2f°C", current.Temp) }°C</p>
+		</div>
+	} else {
+		<div>
+			<p>no temperature found for { city }</p>
+		</div>
+	}
+}
