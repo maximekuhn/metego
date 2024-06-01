@@ -2,7 +2,6 @@ package sqlite
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -64,7 +63,7 @@ func (s *SQLiteBdayStorage) GetAllForDate(month time.Month, day uint8) ([]*calen
 
 		parts := strings.Split(dateStr, "/")
 		if len(parts) != 2 {
-			return nil, errors.New(fmt.Sprintf("date is corrupted for %s", name))
+			return nil, fmt.Errorf("date is corrupted for %s", name)
 		}
 
 		month := parts[0]

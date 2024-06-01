@@ -6,7 +6,7 @@ import (
 )
 
 var (
-    ErrDuplicateBirthday = errors.New("duplicate birthday")
+	ErrDuplicateBirthday = errors.New("duplicate birthday")
 )
 
 type BirthdayStorage interface {

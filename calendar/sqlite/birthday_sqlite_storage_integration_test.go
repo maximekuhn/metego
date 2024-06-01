@@ -125,36 +125,36 @@ func TestGetAll(t *testing.T) {
 		}
 	}
 
-    m := time.April
-    d := 2
-    allBds, err := sut.GetAllForDate(m, uint8(d))
-    if err != nil {
+	m := time.April
+	d := 2
+	allBds, err := sut.GetAllForDate(m, uint8(d))
+	if err != nil {
 		t.Errorf("failed to get all birthdays: %s", err)
 		return
-    }
-    if len(allBds) != 2 {
+	}
+	if len(allBds) != 2 {
 		t.Errorf("want 2 birthdays, got %d", len(allBds))
 		return
-    }
+	}
 
-    if !contains("Toto", allBds) {
+	if !contains("Toto", allBds) {
 		t.Error("expected Toto to be there")
 		return
-    }
+	}
 
-    if !contains("Doggo", allBds) {
+	if !contains("Doggo", allBds) {
 		t.Error("expected Doggo to be there")
 		return
-    }
+	}
 }
 
 func contains(name string, bds []*calendar.Birthday) bool {
-    for _, bd :=  range bds {
-        if bd.Name == name {
-            return true
-        }
-    }
-    return false
+	for _, bd := range bds {
+		if bd.Name == name {
+			return true
+		}
+	}
+	return false
 }
 
 func setupTmpDB(filePath string) (*sql.DB, error) {

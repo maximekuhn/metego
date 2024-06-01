@@ -17,7 +17,7 @@ func TestMigrate(t *testing.T) {
 		t.Errorf("failed to create tmp db file: %s", err)
 		return
 	}
-    defer os.Remove(f.Name())
+	defer os.Remove(f.Name())
 
 	db, err := sql.Open("sqlite3", f.Name())
 	if err != nil {
