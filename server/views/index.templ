@@ -14,11 +14,15 @@ templ Index(city string) {
 					@MenuBar(city)
 				</div>
 				<!-- Current (daily) weather -->
-				<div id="current-weather" class={ currentWeatherContainerStyles() }></div>
-				@CurrentWeather(city, nil)
+				<div id="current-weather" class={ currentWeatherContainerStyles() }>
+					<span>Aujourd'hui</span>
+					@CurrentWeather(city, nil)
+				</div>
 				<!-- Forecast weather -->
-				<div id="forecast-weather"></div>
-				@ForecastWeather(city)
+				<div id="forecast-weather">
+					<span>Prévisions</span>
+					@ForecastWeather(city)
+				</div>
 				<!-- Today events (birthdays, ...) -->
 				<div id="today-events"></div>
 				@Calendar(nil)
@@ -34,4 +38,5 @@ css mainStyles() {
 
 css currentWeatherContainerStyles() {
 	padding-top: 10px;
+    padding-bottom: 10px;
 }
