@@ -46,35 +46,42 @@ func (f *OpenWeatherFetcher) FetchForecast(city string, days int) ([]*weather.Fo
 		return nil, err
 	}
 
-	// get noon forecast for each day (UTC)
-	// ignore today
+	forecastsByDay := make(map[int]*weather.ForecastWeather, 0)
 	today := time.Now().Day()
-	forecasts := make([]*weather.ForecastWeather, 0)
 	for _, f := range fcs.List {
 		time := time.Unix(f.Timestamp, 0)
+		day := time.Day()
 
-		if time.Day() == today {
+		// ignore today forecast
+		if day == today {
 			continue
 		}
 
-		if time.UTC().Hour() != 12 {
-			continue
+		forecastDay, ok := forecastsByDay[day]
+		if !ok {
+			forecastsByDay[day] = &weather.ForecastWeather{
+				Date:        time,
+				HighestTemp: f.Main.MaxTemp,
+				LowestTemp:  f.Main.MinTemp,
+				Pop:         0, // TODO
+			}
+
+			forecastDay = forecastsByDay[day]
 		}
 
-		// TODO: fix highest and lowest (they are the same)
-
-		forecast := &weather.ForecastWeather{
-			Date:        time,
-			HighestTemp: f.Main.MaxTemp,
-			LowestTemp:  f.Main.MinTemp,
-			Pop:         0.0, // TODO
+		if f.Main.MinTemp < forecastDay.LowestTemp {
+			forecastDay.LowestTemp = f.Main.MinTemp
 		}
-
-		forecasts = append(forecasts, forecast)
+		if f.Main.MaxTemp > forecastDay.HighestTemp {
+			forecastDay.HighestTemp = f.Main.MaxTemp
+		}
 	}
 
-	//return forecasts, nil
-    /// XXX: is this dangerous ?
+	forecasts := make([]*weather.ForecastWeather, 0)
+	for _, f := range forecastsByDay {
+		forecasts = append(forecasts, f)
+	}
+
 	return forecasts[0:days], nil
 }
 

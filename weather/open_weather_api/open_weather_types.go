@@ -23,13 +23,13 @@ type owCityCoords struct {
 // -- section: open weather API forecast
 // https://openweathermap.org/forecast5
 type owForecast struct {
-	List []owForecastData `json:"list"`
+	List    []owForecastData `json:"list"`
 	Sunset  int64            `json:"sunrise"`
 	Sunrise int64            `json:"sunset"`
 }
 
 type owForecastData struct {
-	Timestamp int64 `json:"dt"`
+	Timestamp int64              `json:"dt"`
 	Main      owForecastDataMain `json:"main"`
 }
 
