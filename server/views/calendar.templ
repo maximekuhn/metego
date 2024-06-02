@@ -15,7 +15,6 @@ templ CalendarEvents(birthdays []*calendar.Birthday) {
 		<style>
             .calendar-events {
                 background-color: #D1345B;
-                font-weight: bold;
                 color: white;
                 border-radius: 3px;
                 padding-left: 10px;
@@ -73,7 +72,8 @@ css calendarBarStyles() {
 }
 
 css birthdaysNamesStyles() {
-	font-size: 30px;
+	font-size: 36px;
+    font-weight: bold;
 }
 
 func createBirthdaysString(birthdays []*calendar.Birthday) string {

@@ -33,7 +33,7 @@ templ ForeWeatherCard(forecast *weather.ForecastWeather) {
 		</div>
 		<div>min: { fmt.Sprintf("%.1f", forecast.LowestTemp) } °C</div>
 		<div>max: { fmt.Sprintf("%.1f", forecast.HighestTemp) } °C</div>
-		<div>pluie: { fmt.Sprintf("%.1f", forecast.Pop) } %</div>
+		<div>pluie: { fmt.Sprintf("%d", int(forecast.Pop)) } %</div>
 	</div>
 }
 
