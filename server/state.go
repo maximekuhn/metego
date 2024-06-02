@@ -7,7 +7,7 @@ import (
 
 type state struct {
 	fetcher weather.Fetcher
-    storage calendar.BirthdayStorage
+	storage calendar.BirthdayStorage
 }
 
 func NewState(fetcher weather.Fetcher, storage calendar.BirthdayStorage) *state {
