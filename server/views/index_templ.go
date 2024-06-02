@@ -24,7 +24,7 @@ func Index(city string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html><head><title>METEGO</title><script src=\"https://unpkg.com/htmx.org@1.9.12\"></script></head><body>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html><head><title>METEGO</title><meta charset=\"UTF-8\"><script src=\"https://unpkg.com/htmx.org@1.9.12\"></script></head><body>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -84,7 +84,15 @@ func Index(city string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!-- Forecast weather --><div id=\"forecast-weather\"></div><!-- Today events (birthdays, ...) --><div id=\"today-events\"></div></div></body></html>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!-- Forecast weather --><div id=\"forecast-weather\"></div><!-- Today events (birthdays, ...) --><div id=\"today-events\"></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = Calendar(nil).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -98,6 +106,7 @@ func Index(city string) templ.Component {
 func mainStyles() templ.CSSClass {
 	var templ_7745c5c3_CSSBuilder strings.Builder
 	templ_7745c5c3_CSSBuilder.WriteString(`font-size:36px;`)
+	templ_7745c5c3_CSSBuilder.WriteString(`max-height:480px;`)
 	templ_7745c5c3_CSSID := templ.CSSID(`mainStyles`, templ_7745c5c3_CSSBuilder.String())
 	return templ.ComponentCSSClass{
 		ID:    templ_7745c5c3_CSSID,

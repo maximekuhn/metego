@@ -4,6 +4,7 @@ import "github.com/maximekuhn/metego/weather"
 import "fmt"
 
 templ CurrentWeather(city string, current *weather.CurrentWeather) {
+    // get current weather every 10 minutes
 	<div hx-get={ fmt.Sprintf("/api/weather/current?city=%s", city) } hx-trigger="load, every 600s" hx-swap="innerHTML">
 		@CurrentWeatherComp(current)
 	</div>

@@ -71,6 +71,28 @@ func (s *Server) handleCreateBirthday(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// GET /api/birthdays?month=...&day=...
+// GET /api/birthdays
+// return todays birthdays (empty if no birthdays found)
 func (s *Server) handleGetTodayBirthdays(w http.ResponseWriter, r *http.Request) {
+	slog.Info("GET /api/birthdays")
+	now := time.Now()
+	day := now.Day()
+	month := now.Month()
+
+	birthdays, err := s.state.storage.GetAllForDate(month, uint8(day))
+	if err != nil {
+		slog.Error("failed to get otday birthdays", slog.String("err_msg", err.Error()))
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	calendarEvents := views.CalendarEvents(birthdays)
+	w.Header().Add("Content-Type", "text/html")
+
+	err = calendarEvents.Render(r.Context(), w)
+	if err != nil {
+		slog.Error("failed to render Birthdays", slog.String("err_msg", err.Error()))
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 }

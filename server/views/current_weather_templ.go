@@ -34,7 +34,7 @@ func CurrentWeather(city string, current *weather.CurrentWeather) templ.Componen
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/api/weather/current?city=%s", city))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/current_weather.templ`, Line: 7, Col: 64}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/current_weather.templ`, Line: 8, Col: 64}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -186,7 +186,7 @@ func CurrentWeatherComp(current *weather.CurrentWeather) templ.Component {
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.1f", current.Temp))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/current_weather.templ`, Line: 18, Col: 89}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/current_weather.templ`, Line: 19, Col: 89}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
@@ -265,7 +265,7 @@ func CurrentWeatherComp(current *weather.CurrentWeather) templ.Component {
 			var templ_7745c5c3_Var21 string
 			templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.1f", current.FeelsLike))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/current_weather.templ`, Line: 22, Col: 94}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/current_weather.templ`, Line: 23, Col: 94}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 			if templ_7745c5c3_Err != nil {
@@ -344,7 +344,7 @@ func CurrentWeatherComp(current *weather.CurrentWeather) templ.Component {
 			var templ_7745c5c3_Var28 string
 			templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", int(current.Pressure)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/current_weather.templ`, Line: 26, Col: 96}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/current_weather.templ`, Line: 27, Col: 96}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
 			if templ_7745c5c3_Err != nil {
@@ -423,7 +423,7 @@ func CurrentWeatherComp(current *weather.CurrentWeather) templ.Component {
 			var templ_7745c5c3_Var35 string
 			templ_7745c5c3_Var35, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", int(current.Humidity)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/current_weather.templ`, Line: 30, Col: 96}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/current_weather.templ`, Line: 31, Col: 96}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var35))
 			if templ_7745c5c3_Err != nil {

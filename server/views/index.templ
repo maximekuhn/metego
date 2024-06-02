@@ -5,6 +5,7 @@ templ Index(city string) {
 	<html>
 		<head>
 			<title>METEGO</title>
+			<meta charset="UTF-8"/>
 			<script src="https://unpkg.com/htmx.org@1.9.12"></script>
 		</head>
 		<body>
@@ -19,6 +20,7 @@ templ Index(city string) {
 				<div id="forecast-weather"></div>
 				<!-- Today events (birthdays, ...) -->
 				<div id="today-events"></div>
+				@Calendar(nil)
 			</div>
 		</body>
 	</html>
@@ -26,6 +28,7 @@ templ Index(city string) {
 
 css mainStyles() {
 	font-size: 36px;
+	max-height: 480px;
 }
 
 css currentWeatherContainerStyles() {

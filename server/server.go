@@ -27,6 +27,7 @@ func (s *Server) Start() error {
 
 	// birthdays routes
 	http.HandleFunc("GET /birthdays", s.birthdaysHandler)
+	http.HandleFunc("GET /api/birthdays", s.handleGetTodayBirthdays)
 	http.HandleFunc("POST /api/birthdays", s.handleCreateBirthday)
 
 	// TODO: get this from conf
