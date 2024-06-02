@@ -1,0 +1,33 @@
+package views
+
+templ Index(city string) {
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<title>METEGO</title>
+			<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+		</head>
+		<body>
+			<div id="main-container" class={ mainStyles() }>
+				<div id="main-menu">
+					@MenuBar(city)
+				</div>
+				<!-- Current (daily) weather -->
+				<div id="current-weather" class={ currentWeatherContainerStyles() }></div>
+				@CurrentWeather(city, nil)
+				<!-- Forecast weather -->
+				<div id="forecast-weather"></div>
+				<!-- Today events (birthdays, ...) -->
+				<div id="today-events"></div>
+			</div>
+		</body>
+	</html>
+}
+
+css mainStyles() {
+	font-size: 36px;
+}
+
+css currentWeatherContainerStyles() {
+	padding-top: 10px;
+}

@@ -4,26 +4,62 @@ import "github.com/maximekuhn/metego/weather"
 import "fmt"
 
 templ CurrentWeather(city string, current *weather.CurrentWeather) {
-	// TODO: change trigger to "every 10min" or more (API quotas)
 	<div hx-get={ fmt.Sprintf("/api/weather/current?city=%s", city) } hx-trigger="load, every 600s" hx-swap="innerHTML">
-		@CurrentWeatherComp(city, current)
+		@CurrentWeatherComp(current)
 	</div>
 }
 
-templ CurrentWeatherComp(city string, current *weather.CurrentWeather) {
+templ CurrentWeatherComp(current *weather.CurrentWeather) {
 	if current != nil {
-		<div>
-			<h1>{ city }</h1>
-			<ul>
-				<li>temperature: { fmt.Sprintf("%.2f", current.Temp) } °C</li>
-				<li>feels like: { fmt.Sprintf("%.2f", current.FeelsLike) } %</li>
-				<li>pressure: { fmt.Sprintf("%.2f", current.Pressure) } hPa</li>
-				<li>humidity: { fmt.Sprintf("%.2f", current.Humidity) } %</li>
-			</ul>
+		<div class={ currentWeatherStyles() }>
+			<div class={ currentWeatherRowStyle() }>
+				<div class={ currentWeatherMetricCard() }>
+					<span class={ currentWeatherMetricCardTitle() }>Température</span>
+					<span class={ currentWeatherMetricCardMetric() }>{ fmt.Sprintf("%.1f", current.Temp) } °C</span>
+				</div>
+				<div class={ currentWeatherMetricCard() }>
+					<span class={ currentWeatherMetricCardTitle() }>Ressenti</span>
+					<span class={ currentWeatherMetricCardMetric() }>{ fmt.Sprintf("%.1f", current.FeelsLike) } °C</span>
+				</div>
+				<div class={ currentWeatherMetricCard() }>
+					<span class={ currentWeatherMetricCardTitle() }>Pression atmosphérique</span>
+					<span class={ currentWeatherMetricCardMetric() }>{ fmt.Sprintf("%d", int(current.Pressure)) } hPa</span>
+				</div>
+				<div class={ currentWeatherMetricCard() }>
+					<span class={ currentWeatherMetricCardTitle() }>Humidité</span>
+					<span class={ currentWeatherMetricCardMetric() }>{ fmt.Sprintf("%d", int(current.Humidity)) } %</span>
+				</div>
+			</div>
 		</div>
 	} else {
 		<div>
-			<p>could not get current weather for { city }</p>
+			<p>Oops ... :/</p>
 		</div>
 	}
+}
+
+css currentWeatherStyles() {
+	background-color: #EFEFEF;
+	padding-left: 10px;
+	padding-right: 10px;
+	border-radius: 3px;
+}
+
+css currentWeatherRowStyle() {
+	display: flex;
+	justify-content: space-between;
+	padding: 5px;
+}
+
+css currentWeatherMetricCard() {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+css currentWeatherMetricCardTitle() {
+	font-size: 24px;
+}
+
+css currentWeatherMetricCardMetric() {
 }

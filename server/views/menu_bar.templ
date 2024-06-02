@@ -1,0 +1,39 @@
+package views
+
+templ MenuBar(city string) {
+	<div id="menu" class={ menuStyle() }>
+		<div id="menu-city"><span class={ cityStyle() }>{ city }</span></div>
+		<div id="menu-date"></div>
+		<div id="menu-time"></div>
+		<div id="menu-settings">Settings</div>
+		<script>
+            function updateDateTime() {
+                const now = new Date();
+                const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
+                const frenchDate = now.toLocaleDateString('fr-FR', dateOptions);
+
+                const timeOptions = { hour: 'numeric', minute: 'numeric', second: 'numeric' };
+                const frenchTime = now.toLocaleTimeString('fr-FR', timeOptions);
+
+                document.getElementById("menu-date").innerText = frenchDate;
+                document.getElementById("menu-time").innerText = frenchTime;
+            }
+
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+        </script>
+	</div>
+}
+
+css menuStyle() {
+    color: white;
+	background-color: #3454D1;
+	display: flex;
+	justify-content: space-between;
+	padding: 10px;
+    border-radius: 3px;
+}
+
+css cityStyle() {
+	text-transform: capitalize;
+}

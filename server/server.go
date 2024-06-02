@@ -18,6 +18,9 @@ func NewServer(fetcher weather.Fetcher, storage calendar.BirthdayStorage) *Serve
 }
 
 func (s *Server) Start() error {
+    // index routes
+	http.HandleFunc("GET /{city}", s.handleRoot)
+
 	// weather routes
 	http.HandleFunc("GET /weather/{city}", s.weatherHandler)
 	http.HandleFunc("GET /api/weather/current/", s.currentWeatherHandler)

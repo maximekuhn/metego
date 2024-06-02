@@ -32,7 +32,7 @@ func (s *Server) currentWeatherHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	currentWeatherComp := views.CurrentWeatherComp(city, currentWeather)
+	currentWeatherComp := views.CurrentWeatherComp(currentWeather)
 	w.Header().Add("Content-Type", "text/html")
 	err = currentWeatherComp.Render(r.Context(), w)
 	if err != nil {
