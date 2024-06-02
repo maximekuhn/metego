@@ -63,7 +63,7 @@ func (f *OpenWeatherFetcher) FetchForecast(city string, days int) ([]*weather.Fo
 				Date:        time,
 				HighestTemp: f.Main.MaxTemp,
 				LowestTemp:  f.Main.MinTemp,
-				Pop:         0, // TODO
+				Pop:         f.Pop,
 			}
 
 			forecastDay = forecastsByDay[day]
@@ -74,6 +74,9 @@ func (f *OpenWeatherFetcher) FetchForecast(city string, days int) ([]*weather.Fo
 		}
 		if f.Main.MaxTemp > forecastDay.HighestTemp {
 			forecastDay.HighestTemp = f.Main.MaxTemp
+		}
+		if f.Pop > forecastDay.Pop {
+			forecastDay.Pop = f.Pop
 		}
 	}
 

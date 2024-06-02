@@ -31,13 +31,14 @@ templ ForeWeatherCard(forecast *weather.ForecastWeather) {
 				{ fmt.Sprintf("%02d/%02d", forecast.Date.Day(), forecast.Date.Month()) }
 			</span>
 		</div>
-        <div>min: { fmt.Sprintf("%.1f", forecast.LowestTemp) } °C</div>
+		<div>min: { fmt.Sprintf("%.1f", forecast.LowestTemp) } °C</div>
 		<div>max: { fmt.Sprintf("%.1f", forecast.HighestTemp) } °C</div>
+		<div>pluie: { fmt.Sprintf("%.1f", forecast.Pop) } %</div>
 	</div>
 }
 
 css forecastWeatherCompStyles() {
-    font-size: 28px;
+	font-size: 28px;
 	display: flex;
 	justify-content: space-between;
 	padding-left: 10px;
@@ -47,11 +48,11 @@ css forecastWeatherCompStyles() {
 
 css forecastDateStyles() {
 	font-weight: bold;
-    font-size: 24px;
+	font-size: 24px;
 }
 
 css forecastWeatherCardStyles() {
 	background-color: #EFEFEF;
-    border-radius: 3px;
-    padding: 5px;
+	border-radius: 3px;
+	padding: 5px;
 }
