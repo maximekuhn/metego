@@ -1,0 +1,45 @@
+package views
+
+import "github.com/maximekuhn/metego/weather"
+import "fmt"
+
+templ ForecastWeather(city string) {
+	// get forecast weather every 10 minutes
+	<div hx-get={ fmt.Sprintf("/api/weather/forecast?city=%s&days=3", city) } hx-trigger="load, every 600s" hx-swap="innerHTML">
+		@ForecastWeatherComp(nil)
+	</div>
+}
+
+templ ForecastWeatherComp(forecasts []*weather.ForecastWeather) {
+	if forecasts != nil  || len(forecasts) > 0 {
+		<div class={ forecastWeatherCompStyles() }>
+			for _, forecast := range forecasts {
+				<div>
+					<p>
+						{ fmt.Sprintf(
+                    "%d-%02d-%02d, %dh",
+                    forecast.Date.Year(),
+                    forecast.Date.Month(),
+                    forecast.Date.Day(),
+                    forecast.Date.Hour(),
+                    ) }
+					</p>
+					<p>max: { fmt.Sprintf("%.1f", forecast.HighestTemp) } °C</p>
+					<p>min: { fmt.Sprintf("%.1f", forecast.LowestTemp) } °C</p>
+				</div>
+			}
+		</div>
+	} else {
+		<div>
+			<p>Oops ... :/</p>
+		</div>
+	}
+}
+
+css forecastWeatherCompStyles() {
+	font-size: 20px;
+	display: flex;
+	justify-content: space-between;
+	padding-left: 10px;
+	padding-right: 10px;
+}

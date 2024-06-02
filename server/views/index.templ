@@ -18,6 +18,7 @@ templ Index(city string) {
 				@CurrentWeather(city, nil)
 				<!-- Forecast weather -->
 				<div id="forecast-weather"></div>
+				@ForecastWeather(city)
 				<!-- Today events (birthdays, ...) -->
 				<div id="today-events"></div>
 				@Calendar(nil)
