@@ -33,14 +33,14 @@ templ ForeWeatherCard(forecast *weather.ForecastWeather) {
 			</span>
 		</div>
 		<div id="forecast-weather-card-img">
-			<img src={ "/static/images/weather_icons/clear_sky.png" } alt={ "todo" }/>
+			<img src={ imagePath(forecast.Icon) } alt={ imageAlt(forecast.Icon) }/>
 		</div>
 		<div id="forecast-weather-card-max-temp">{ fmt.Sprintf("%.1f", forecast.HighestTemp) }</div>
 		<div id="forecast-weather-card-min-temp">{ fmt.Sprintf("%.1f", forecast.LowestTemp) }</div>
 		<div id="forecast-weather-card-rain">
-        <img src="/static/images/weather_icons/rain-drop.png" alt="pop"/>
-        { fmt.Sprintf("%d", int(forecast.Pop)) } %
-        </div>
+			<img src="/static/images/weather_icons/rain-drop.png" alt="pop"/>
+			{ fmt.Sprintf("%d", int(forecast.Pop)) } %
+		</div>
 	</div>
 }
 

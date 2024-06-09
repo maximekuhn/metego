@@ -74,12 +74,22 @@ func (f *OpenWeatherFetcher) FetchForecast(city string, days int) ([]*weather.Fo
 		fpop := f.Pop * 100
 
 		forecastDay, ok := forecastsByDay[day]
+
+		if len(f.Weather) == 0 {
+			return nil, errors.New("could not fetch weather icon")
+		}
+		icon, err := toWeatherIcon(f.Weather[0].Icon)
+		if err != nil {
+			return nil, err
+		}
+
 		if !ok {
 			forecastsByDay[day] = &weather.ForecastWeather{
 				Date:        time,
 				HighestTemp: f.Main.MaxTemp,
 				LowestTemp:  f.Main.MinTemp,
 				Pop:         fpop,
+				Icon:        icon,
 			}
 
 			forecastDay = forecastsByDay[day]

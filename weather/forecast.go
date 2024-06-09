@@ -11,4 +11,6 @@ type ForecastWeather struct {
 
 	// percentage of precipitation
 	Pop float64
+
+	Icon CurrentWeatherIcon
 }

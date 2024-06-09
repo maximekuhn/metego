@@ -35,12 +35,17 @@ type owForecast struct {
 }
 
 type owForecastData struct {
-	Timestamp int64              `json:"dt"`
-	Main      owForecastDataMain `json:"main"`
-	Pop       float64            `json:"pop"`
+	Timestamp int64                 `json:"dt"`
+	Main      owForecastDataMain    `json:"main"`
+	Weather   []owForecastDataWeather `json:"weather"`
+	Pop       float64               `json:"pop"`
 }
 
 type owForecastDataMain struct {
 	MinTemp float64 `json:"temp_min"`
 	MaxTemp float64 `json:"temp_max"`
+}
+
+type owForecastDataWeather struct {
+	Icon string `json:"icon"`
 }

@@ -131,9 +131,9 @@ func ForeWeatherCard(forecast *weather.ForecastWeather) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
-		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs("/static/images/weather_icons/clear_sky.png")
+		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(imagePath(forecast.Icon))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/forecast_weather.templ`, Line: 36, Col: 58}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/forecast_weather.templ`, Line: 36, Col: 38}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -144,9 +144,9 @@ func ForeWeatherCard(forecast *weather.ForecastWeather) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var7 string
-		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs("todo")
+		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(imageAlt(forecast.Icon))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/forecast_weather.templ`, Line: 36, Col: 73}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/forecast_weather.templ`, Line: 36, Col: 70}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -185,7 +185,7 @@ func ForeWeatherCard(forecast *weather.ForecastWeather) templ.Component {
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", int(forecast.Pop)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/forecast_weather.templ`, Line: 42, Col: 46}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/forecast_weather.templ`, Line: 42, Col: 41}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
