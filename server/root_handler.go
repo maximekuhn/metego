@@ -7,10 +7,11 @@ import (
 	"github.com/maximekuhn/metego/server/views"
 )
 
-// GET /city
+// GET /?city=...
 func (s *Server) handleRoot(w http.ResponseWriter, r *http.Request) {
-	city := r.PathValue("city")
-	slog.Info("GET /weather/{city}", slog.String("city", city))
+	queryParams := r.URL.Query()
+	city := queryParams.Get("city")
+	slog.Info("GET /?city={city}", slog.String("city", city))
 
 	w.Header().Add("Content-Type", "text/html")
 

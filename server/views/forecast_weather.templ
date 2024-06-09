@@ -2,6 +2,7 @@ package views
 
 import "github.com/maximekuhn/metego/weather"
 import "fmt"
+import "time"
 
 templ ForecastWeather(city string) {
 	// get forecast weather every 2 hours
@@ -28,13 +29,18 @@ templ ForeWeatherCard(forecast *weather.ForecastWeather) {
 	<div class={ forecastWeatherCardStyles() }>
 		<div>
 			<span class={ forecastDateStyles() }>
-				{ fmt.Sprintf("%02d/%02d", forecast.Date.Day(), forecast.Date.Month()) }
+				{ forecastWeatherTitle(forecast.Date) }
 			</span>
 		</div>
 		<div>min: { fmt.Sprintf("%.1f", forecast.LowestTemp) } °C</div>
 		<div>max: { fmt.Sprintf("%.1f", forecast.HighestTemp) } °C</div>
 		<div>pluie: { fmt.Sprintf("%d", int(forecast.Pop)) } %</div>
 	</div>
+}
+
+func forecastWeatherTitle(t time.Time) string {
+	daysFrench := []string{"Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"}
+	return fmt.Sprintf("%s. %02d/%02d", daysFrench[t.Weekday()][:3], t.Day(), t.Month())
 }
 
 css forecastWeatherCompStyles() {

@@ -9,23 +9,24 @@ templ Index(city string) {
 			<script src="https://unpkg.com/htmx.org@1.9.12"></script>
 		</head>
 		<body>
-			<div id="main-container" class={ mainStyles() }>
-				<div id="main-menu">
-					@MenuBar(city)
+			<div class={ mainStyles() }>
+				<div id="main-container">
+					<div id="main-menu">
+						@MenuBar(city)
+					</div>
+					<!-- Current (daily) weather -->
+					<div id="current-weather" class={ currentWeatherContainerStyles() }>
+						@CurrentWeather(city)
+					</div>
+					<!-- Forecast weather -->
+					<div id="forecast-weather">
+						<span>Prévisions</span>
+						@ForecastWeather(city)
+					</div>
+					<!-- Today events (birthdays, ...) -->
+					<div id="today-events"></div>
+					@Calendar(nil)
 				</div>
-				<!-- Current (daily) weather -->
-				<div id="current-weather" class={ currentWeatherContainerStyles() }>
-					<span>Aujourd'hui</span>
-					@CurrentWeather(city, nil)
-				</div>
-				<!-- Forecast weather -->
-				<div id="forecast-weather">
-					<span>Prévisions</span>
-					@ForecastWeather(city)
-				</div>
-				<!-- Today events (birthdays, ...) -->
-				<div id="today-events"></div>
-				@Calendar(nil)
 			</div>
 		</body>
 	</html>
@@ -34,9 +35,10 @@ templ Index(city string) {
 css mainStyles() {
 	font-size: 36px;
 	max-height: 480px;
+	cursor: none;
 }
 
 css currentWeatherContainerStyles() {
 	padding-top: 10px;
-    padding-bottom: 10px;
+	padding-bottom: 10px;
 }

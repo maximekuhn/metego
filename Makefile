@@ -9,6 +9,9 @@ fmt:
 test_integration:
 	go test -tags=integration -v ./...
 
+test:
+	go test -v ./...
+
 build: templ
 	go build -v -o bin/web cmd/web/main.go
 
@@ -30,6 +33,7 @@ help:
 	@echo "fmtCheck         - Check if code is correctly formatted"
 	@echo "fmt              - Format code"
 	@echo "test_integration - Run all integration tests"
+	@echo "test             - Run all tests"
 	@echo "build            - Build all binaries"
 	@echo "build_rpi        - Build all binaries for Raspberry Pi (ARMv7) // REQUIRES DOCKER"
 	@echo "clean            - Clean up bin/ directory"

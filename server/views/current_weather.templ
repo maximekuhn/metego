@@ -3,15 +3,23 @@ package views
 import "github.com/maximekuhn/metego/weather"
 import "fmt"
 
-templ CurrentWeather(city string, current *weather.CurrentWeather) {
-    // get current weather every 10 minutes
+templ CurrentWeather(city string) {
+	// get current weather every 10 minutes
 	<div hx-get={ fmt.Sprintf("/api/weather/current?city=%s", city) } hx-trigger="load, every 600s" hx-swap="innerHTML">
-		@CurrentWeatherComp(current)
+		@CurrentWeatherComp(nil)
 	</div>
 }
 
 templ CurrentWeatherComp(current *weather.CurrentWeather) {
 	if current != nil {
+		<div class={ currentWeatherDescriptionStyles() }>
+			<div>
+				@CurrentWeatherIcon(getPathAndAlt(current.Icon))
+			</div>
+			<div>
+				{ current.Description }
+			</div>
+		</div>
 		<div class={ currentWeatherStyles() }>
 			<div class={ currentWeatherRowStyle() }>
 				<div class={ currentWeatherMetricCard() }>
@@ -39,6 +47,35 @@ templ CurrentWeatherComp(current *weather.CurrentWeather) {
 	}
 }
 
+templ CurrentWeatherIcon(path, alt string) {
+	<img src={ path } alt={ alt } class={ currentWeatherImage() }/>
+}
+
+func getPathAndAlt(icon weather.CurrentWeatherIcon) (string, string) {
+	switch icon {
+	case weather.IconClearSky:
+		return "static/images/weather_icons/clear_sky.png", "Clear Sky"
+	case weather.IconFewClouds:
+		return "static/images/weather_icons/few_clouds.png", "Few Clouds"
+	case weather.IconScatteredClouds:
+		return "static/images/weather_icons/few_clouds.png", "Scattered Clouds"
+	case weather.IconBrokenClouds:
+		return "static/images/weather_icons/clouds.png", "Broken Clouds"
+	case weather.IconShowerRain:
+		return "static/images/weather_icons/rain.png", "Shower Rain"
+	case weather.IconRain:
+		return "static/images/weather_icons/rain.png", "Rain"
+	case weather.IconThunderstorm:
+		return "static/images/weather_icons/thunderstorm.png", "Thunderstorm"
+	case weather.IconSnow:
+		return "static/images/weather_icons/snow.png", "Snow"
+	case weather.IconMist:
+		return "static/images/weather_icons/clouds.png", "Mist"
+	}
+
+	return "", "unknown icon"
+}
+
 css currentWeatherStyles() {
 	background-color: #EFEFEF;
 	padding-left: 10px;
@@ -63,4 +100,13 @@ css currentWeatherMetricCardTitle() {
 }
 
 css currentWeatherMetricCardMetric() {
+}
+
+css currentWeatherImage() {
+	width: 90px;
+}
+
+css currentWeatherDescriptionStyles() {
+	display: flex;
+	vertical-align: baseline;
 }

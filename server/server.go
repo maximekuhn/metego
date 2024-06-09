@@ -19,7 +19,7 @@ func NewServer(fetcher weather.Fetcher, storage calendar.BirthdayStorage) *Serve
 
 func (s *Server) Start() error {
 	// index routes
-	http.HandleFunc("GET /{city}", s.handleRoot)
+	http.HandleFunc("GET /", s.handleRoot)
 
 	// weather routes
 	http.HandleFunc("GET /weather/{city}", s.weatherHandler)
@@ -30,6 +30,9 @@ func (s *Server) Start() error {
 	http.HandleFunc("GET /birthdays", s.birthdaysHandler)
 	http.HandleFunc("GET /api/birthdays", s.handleGetTodayBirthdays)
 	http.HandleFunc("POST /api/birthdays", s.handleCreateBirthday)
+
+	// static files
+	http.Handle("GET /static/", http.StripPrefix("/static", http.FileServer(http.Dir("./static"))))
 
 	// TODO: get this from conf
 	err := http.ListenAndServe(":9004", nil)

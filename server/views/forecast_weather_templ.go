@@ -13,6 +13,7 @@ import "strings"
 
 import "github.com/maximekuhn/metego/weather"
 import "fmt"
+import "time"
 
 func ForecastWeather(city string) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
@@ -34,7 +35,7 @@ func ForecastWeather(city string) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/api/weather/forecast?city=%s&days=4", city))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/forecast_weather.templ`, Line: 8, Col: 72}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/forecast_weather.templ`, Line: 9, Col: 72}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -176,9 +177,9 @@ func ForeWeatherCard(forecast *weather.ForecastWeather) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var11 string
-		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%02d/%02d", forecast.Date.Day(), forecast.Date.Month()))
+		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(forecastWeatherTitle(forecast.Date))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/forecast_weather.templ`, Line: 31, Col: 74}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/forecast_weather.templ`, Line: 32, Col: 41}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
@@ -191,7 +192,7 @@ func ForeWeatherCard(forecast *weather.ForecastWeather) templ.Component {
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.1f", forecast.LowestTemp))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/forecast_weather.templ`, Line: 34, Col: 54}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/forecast_weather.templ`, Line: 35, Col: 54}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
@@ -204,7 +205,7 @@ func ForeWeatherCard(forecast *weather.ForecastWeather) templ.Component {
 		var templ_7745c5c3_Var13 string
 		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.1f", forecast.HighestTemp))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/forecast_weather.templ`, Line: 35, Col: 55}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/forecast_weather.templ`, Line: 36, Col: 55}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 		if templ_7745c5c3_Err != nil {
@@ -217,7 +218,7 @@ func ForeWeatherCard(forecast *weather.ForecastWeather) templ.Component {
 		var templ_7745c5c3_Var14 string
 		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", int(forecast.Pop)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/forecast_weather.templ`, Line: 36, Col: 52}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `server/views/forecast_weather.templ`, Line: 37, Col: 52}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 		if templ_7745c5c3_Err != nil {
@@ -232,6 +233,11 @@ func ForeWeatherCard(forecast *weather.ForecastWeather) templ.Component {
 		}
 		return templ_7745c5c3_Err
 	})
+}
+
+func forecastWeatherTitle(t time.Time) string {
+	daysFrench := []string{"Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"}
+	return fmt.Sprintf("%s. %02d/%02d", daysFrench[t.Weekday()][:3], t.Day(), t.Month())
 }
 
 func forecastWeatherCompStyles() templ.CSSClass {

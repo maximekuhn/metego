@@ -3,7 +3,13 @@ package openweatherapi
 // -- section: open weather API current
 // https://openweathermap.org/current
 type owCurrent struct {
-	Main owCurrentMain `json:"main"`
+	Weather []owCurrentWeather `json:"weather"`
+	Main    owCurrentMain      `json:"main"`
+}
+
+type owCurrentWeather struct {
+	Description string `json:"description"`
+	Icon        string `json:"icon"`
 }
 
 type owCurrentMain struct {
@@ -31,7 +37,7 @@ type owForecast struct {
 type owForecastData struct {
 	Timestamp int64              `json:"dt"`
 	Main      owForecastDataMain `json:"main"`
-	Pop       float64            `json"pop"`
+	Pop       float64            `json:"pop"`
 }
 
 type owForecastDataMain struct {

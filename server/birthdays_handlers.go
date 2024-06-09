@@ -14,7 +14,7 @@ import (
 func (s *Server) birthdaysHandler(w http.ResponseWriter, r *http.Request) {
 	slog.Info("GET /birthdays")
 
-	bdays, err := s.state.storage.GetAll(10, 0)
+	bdays, err := s.state.storage.GetAll(1000, 0)
 	if err != nil {
 		slog.Error(
 			"failed to get birthdays from db",

@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"sort"
+	"sync"
 	"time"
 
 	"github.com/maximekuhn/metego/weather"
@@ -13,14 +15,15 @@ import (
 type OpenWeatherFetcher struct {
 	apiKey string
 
-	// TODO: prevent data races (mutex or rw lock)
-	cities map[string]*owCityCoords
+	citiesMu sync.Mutex
+	cities   map[string]*owCityCoords
 }
 
 func NewOpenWeatherFetcher(apiKey string) *OpenWeatherFetcher {
 	return &OpenWeatherFetcher{
-		apiKey: apiKey,
-		cities: map[string]*owCityCoords{},
+		apiKey:   apiKey,
+		citiesMu: sync.Mutex{},
+		cities:   map[string]*owCityCoords{},
 	}
 }
 
@@ -30,11 +33,22 @@ func (f *OpenWeatherFetcher) FetchCurrent(city string) (*weather.CurrentWeather,
 		return nil, err
 	}
 
+	if len(curr.Weather) == 0 {
+		return nil, errors.New("did not fetch weather")
+	}
+
+	icon, err := toWeatherIcon(curr.Weather[0].Icon)
+	if err != nil {
+		return nil, err
+	}
+
 	current := weather.CurrentWeather{
-		Temp:      curr.Main.Temp,
-		FeelsLike: curr.Main.FeelsLike,
-		Pressure:  curr.Main.Pressure,
-		Humidity:  curr.Main.Humidity,
+		Temp:        curr.Main.Temp,
+		FeelsLike:   curr.Main.FeelsLike,
+		Pressure:    curr.Main.Pressure,
+		Humidity:    curr.Main.Humidity,
+		Description: curr.Weather[0].Description,
+		Icon:        icon,
 	}
 
 	return &current, nil
@@ -87,11 +101,19 @@ func (f *OpenWeatherFetcher) FetchForecast(city string, days int) ([]*weather.Fo
 		forecasts = append(forecasts, f)
 	}
 
+	// sort by date
+	sort.Slice(forecasts, func(i, j int) bool {
+		return forecasts[i].Date.Before(forecasts[j].Date)
+	})
+
 	return forecasts[0:days], nil
 }
 
 // fetch the current weather for a given city
 func (f *OpenWeatherFetcher) fetchCurrent(city string) (*owCurrent, error) {
+	f.citiesMu.Lock()
+	defer f.citiesMu.Unlock()
+
 	// open weather requires city coordinates and not city name
 	coords, ok := f.cities[city]
 	if !ok {
@@ -130,6 +152,9 @@ func (f *OpenWeatherFetcher) fetchCurrent(city string) (*owCurrent, error) {
 
 // fetch forecast weather for the next 5 days for a given city
 func (f *OpenWeatherFetcher) fetchForecast(city string) (*owForecast, error) {
+	f.citiesMu.Lock()
+	defer f.citiesMu.Unlock()
+
 	// open weather requires city coordinates and not city name
 	coords, ok := f.cities[city]
 	if !ok {
