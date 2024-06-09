@@ -6,22 +6,24 @@ templ Index(city string) {
 		<head>
 			<title>METEGO</title>
 			<meta charset="UTF-8"/>
+			<link rel="stylesheet" href="/static/styles/styles.css"/>
 			<script src="https://unpkg.com/htmx.org@1.9.12"></script>
 		</head>
 		<body>
-			<div class={ mainStyles() }>
+			<div>
 				<div id="main-container">
 					<div id="main-menu">
 						@MenuBar(city)
 					</div>
 					<!-- Current (daily) weather -->
-					<div id="current-weather" class={ currentWeatherContainerStyles() }>
-						@CurrentWeather(city)
-					</div>
-					<!-- Forecast weather -->
-					<div id="forecast-weather">
-						<span>Prévisions</span>
-						@ForecastWeather(city)
+					<div id="current-weather-forecast">
+						<div id="current-weather">
+							@CurrentWeather(city)
+						</div>
+						<!-- Forecast weather -->
+						<div id="forecast-weather">
+							@ForecastWeather(city)
+						</div>
 					</div>
 					<!-- Today events (birthdays, ...) -->
 					<div id="today-events"></div>
@@ -30,15 +32,4 @@ templ Index(city string) {
 			</div>
 		</body>
 	</html>
-}
-
-css mainStyles() {
-	font-size: 36px;
-	max-height: 480px;
-	cursor: none;
-}
-
-css currentWeatherContainerStyles() {
-	padding-top: 10px;
-	padding-bottom: 10px;
 }

@@ -5,40 +5,15 @@ import "fmt"
 
 templ CurrentWeather(city string) {
 	// get current weather every 10 minutes
-	<div hx-get={ fmt.Sprintf("/api/weather/current?city=%s", city) } hx-trigger="load, every 600s" hx-swap="innerHTML">
+	<div hx-get={ fmt.Sprintf("/api/weather/current?city=%s", city) } hx-trigger="load, every 600s" hx-swap="innerHTML" id="current-weather-container">
 		@CurrentWeatherComp(nil)
 	</div>
 }
 
 templ CurrentWeatherComp(current *weather.CurrentWeather) {
 	if current != nil {
-		<div class={ currentWeatherDescriptionStyles() }>
-			<div>
-				@CurrentWeatherIcon(getPathAndAlt(current.Icon))
-			</div>
-			<div>
-				{ current.Description }
-			</div>
-		</div>
-		<div class={ currentWeatherStyles() }>
-			<div class={ currentWeatherRowStyle() }>
-				<div class={ currentWeatherMetricCard() }>
-					<span class={ currentWeatherMetricCardTitle() }>Température</span>
-					<span class={ currentWeatherMetricCardMetric() }>{ fmt.Sprintf("%.1f", current.Temp) } °C</span>
-				</div>
-				<div class={ currentWeatherMetricCard() }>
-					<span class={ currentWeatherMetricCardTitle() }>Ressenti</span>
-					<span class={ currentWeatherMetricCardMetric() }>{ fmt.Sprintf("%.1f", current.FeelsLike) } °C</span>
-				</div>
-				<div class={ currentWeatherMetricCard() }>
-					<span class={ currentWeatherMetricCardTitle() }>Pression atmosphérique</span>
-					<span class={ currentWeatherMetricCardMetric() }>{ fmt.Sprintf("%d", int(current.Pressure)) } hPa</span>
-				</div>
-				<div class={ currentWeatherMetricCard() }>
-					<span class={ currentWeatherMetricCardTitle() }>Humidité</span>
-					<span class={ currentWeatherMetricCardMetric() }>{ fmt.Sprintf("%d", int(current.Humidity)) } %</span>
-				</div>
-			</div>
+		<div id="current-weather-card">
+			@CurrentWeatherCard(imagePath(current.Icon), imageAlt(current.Icon), current.Description, current.Temp)
 		</div>
 	} else {
 		<div>
@@ -47,66 +22,68 @@ templ CurrentWeatherComp(current *weather.CurrentWeather) {
 	}
 }
 
-templ CurrentWeatherIcon(path, alt string) {
-	<img src={ path } alt={ alt } class={ currentWeatherImage() }/>
+templ CurrentWeatherCard(imgPath, imgAlt, description string, temperature float64) {
+	<div id="current-weather-card-img-temp">
+		<div id="current-weather-card-img">
+			<img src={ imgPath } alt={ imgAlt }/>
+		</div>
+		<div id="current-weather-card-temperature">
+			<span>{ fmt.Sprintf("%.1f °C", temperature) }</span>
+		</div>
+	</div>
+	<div id="current-weather-card-description">
+		<span>{ description }</span>
+	</div>
 }
 
-func getPathAndAlt(icon weather.CurrentWeatherIcon) (string, string) {
+templ CurrentWeatherIcon(path, alt string) {
+	<img src={ path } alt={ alt }/>
+}
+
+func imagePath(icon weather.CurrentWeatherIcon) string {
 	switch icon {
 	case weather.IconClearSky:
-		return "static/images/weather_icons/clear_sky.png", "Clear Sky"
+		return "static/images/weather_icons/clear_sky.png"
 	case weather.IconFewClouds:
-		return "static/images/weather_icons/few_clouds.png", "Few Clouds"
+		return "static/images/weather_icons/few_clouds.png"
 	case weather.IconScatteredClouds:
-		return "static/images/weather_icons/few_clouds.png", "Scattered Clouds"
+		return "static/images/weather_icons/few_clouds.png"
 	case weather.IconBrokenClouds:
-		return "static/images/weather_icons/clouds.png", "Broken Clouds"
+		return "static/images/weather_icons/clouds.png"
 	case weather.IconShowerRain:
-		return "static/images/weather_icons/rain.png", "Shower Rain"
+		return "static/images/weather_icons/rain.png"
 	case weather.IconRain:
-		return "static/images/weather_icons/rain.png", "Rain"
+		return "static/images/weather_icons/rain.png"
 	case weather.IconThunderstorm:
-		return "static/images/weather_icons/thunderstorm.png", "Thunderstorm"
+		return "static/images/weather_icons/thunderstorm.png"
 	case weather.IconSnow:
-		return "static/images/weather_icons/snow.png", "Snow"
+		return "static/images/weather_icons/snow.png"
 	case weather.IconMist:
-		return "static/images/weather_icons/clouds.png", "Mist"
+		return "static/images/weather_icons/clouds.png"
 	}
-
-	return "", "unknown icon"
+	return ""
 }
 
-css currentWeatherStyles() {
-	background-color: #EFEFEF;
-	padding-left: 10px;
-	padding-right: 10px;
-	border-radius: 3px;
-}
-
-css currentWeatherRowStyle() {
-	display: flex;
-	justify-content: space-between;
-	padding: 5px;
-}
-
-css currentWeatherMetricCard() {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-css currentWeatherMetricCardTitle() {
-	font-size: 24px;
-}
-
-css currentWeatherMetricCardMetric() {
-}
-
-css currentWeatherImage() {
-	width: 90px;
-}
-
-css currentWeatherDescriptionStyles() {
-	display: flex;
-	vertical-align: baseline;
+func imageAlt(icon weather.CurrentWeatherIcon) string {
+	switch icon {
+	case weather.IconClearSky:
+		return "ciel dégagé"
+	case weather.IconFewClouds:
+		return "quelques nuages"
+	case weather.IconScatteredClouds:
+		return "nuages dispersés"
+	case weather.IconBrokenClouds:
+		return "nuageux"
+	case weather.IconShowerRain:
+		return "averses pluvieuses"
+	case weather.IconRain:
+		return "pluie"
+	case weather.IconThunderstorm:
+		return "orage"
+	case weather.IconSnow:
+		return "neige"
+	case weather.IconMist:
+		return "brume"
+	}
+	return "unknown icon"
 }

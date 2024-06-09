@@ -6,14 +6,14 @@ import "time"
 
 templ ForecastWeather(city string) {
 	// get forecast weather every 2 hours
-	<div hx-get={ fmt.Sprintf("/api/weather/forecast?city=%s&days=4", city) } hx-trigger="load, every 7200s" hx-swap="innerHTML">
+	<div hx-get={ fmt.Sprintf("/api/weather/forecast?city=%s&days=4", city) } hx-trigger="load, every 7200s" hx-swap="innerHTML" class="forecast-weather-container">
 		@ForecastWeatherComp(nil)
 	</div>
 }
 
 templ ForecastWeatherComp(forecasts []*weather.ForecastWeather) {
 	if forecasts != nil  || len(forecasts) > 0 {
-		<div class={ forecastWeatherCompStyles() }>
+		<div id="forecast-weather-cards">
 			for _, forecast := range forecasts {
 				@ForeWeatherCard(forecast)
 			}
@@ -26,39 +26,25 @@ templ ForecastWeatherComp(forecasts []*weather.ForecastWeather) {
 }
 
 templ ForeWeatherCard(forecast *weather.ForecastWeather) {
-	<div class={ forecastWeatherCardStyles() }>
-		<div>
-			<span class={ forecastDateStyles() }>
+	<div id="forecast-weather-card">
+		<div id="forecast-weather-card-date">
+			<span>
 				{ forecastWeatherTitle(forecast.Date) }
 			</span>
 		</div>
-		<div>min: { fmt.Sprintf("%.1f", forecast.LowestTemp) } °C</div>
-		<div>max: { fmt.Sprintf("%.1f", forecast.HighestTemp) } °C</div>
-		<div>pluie: { fmt.Sprintf("%d", int(forecast.Pop)) } %</div>
+		<div id="forecast-weather-card-img">
+			<img src={ "/static/images/weather_icons/clear_sky.png" } alt={ "todo" }/>
+		</div>
+		<div id="forecast-weather-card-max-temp">{ fmt.Sprintf("%.1f", forecast.HighestTemp) }</div>
+		<div id="forecast-weather-card-min-temp">{ fmt.Sprintf("%.1f", forecast.LowestTemp) }</div>
+		<div id="forecast-weather-card-rain">
+        <img src="/static/images/weather_icons/rain-drop.png" alt="pop"/>
+        { fmt.Sprintf("%d", int(forecast.Pop)) } %
+        </div>
 	</div>
 }
 
 func forecastWeatherTitle(t time.Time) string {
 	daysFrench := []string{"Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"}
-	return fmt.Sprintf("%s. %02d/%02d", daysFrench[t.Weekday()][:3], t.Day(), t.Month())
-}
-
-css forecastWeatherCompStyles() {
-	font-size: 28px;
-	display: flex;
-	justify-content: space-between;
-	padding-left: 10px;
-	padding-right: 10px;
-	padding-top: 10px;
-}
-
-css forecastDateStyles() {
-	font-weight: bold;
-	font-size: 24px;
-}
-
-css forecastWeatherCardStyles() {
-	background-color: #EFEFEF;
-	border-radius: 3px;
-	padding: 5px;
+	return fmt.Sprintf("%s. %02d", daysFrench[t.Weekday()][:3], t.Day())
 }

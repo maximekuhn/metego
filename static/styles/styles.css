@@ -1,0 +1,134 @@
+/* General */
+@font-face {
+    font-family: "Virgil";
+    src: url("../fonts/Virgil.woff2") format("woff2");
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Virgil";
+}
+
+/* Section start: Menu */
+#menu {
+    background-color: #FFEEA9;
+    font-size: 42px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+#menu-city span {
+    text-transform: capitalize;
+}
+
+#menu-date {
+    text-transform: capitalize;
+}
+/* Section end: Menu */
+
+/* Section start: current weather */
+#current-weather-card {
+    background-color: #FEFFD2;
+    border-radius: 25px;
+    border: 2px solid #FFBF78;
+    width: 500px;
+}
+
+#current-weather-card-img img {
+    width: 250px;
+}
+
+#current-weather-card-temperature {
+    font-size: 68px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+#current-weather-card-description {
+    font-size: 36px;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+#current-weather-card-description span {
+    text-transform: capitalize;
+}
+
+#current-weather-card-img-temp {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+#current-weather {
+    padding-top: 25px;
+    padding-left: 25px;
+    width: fit-content;
+}
+
+#current-weather-container {
+    width: fit-content;
+}
+/* Section end: current weather */
+
+/* Section start: current/forecast weather row */
+#current-weather-forecast {
+    display: flex;
+}
+/* Section end: current/forecast weather row */
+
+/* Section start: forecast weather */
+#forecast-weather-cards {
+    border-radius: 25px;
+    border: 2px solid #FFBF78;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+#forecast-weather {
+    padding-top: 25px;
+    padding-left: 25px;
+    width: 700px;
+}
+
+#forecast-weather-card {
+    text-align: center;
+}
+
+#forecast-weather-card-date {
+    font-size: 32px;
+}
+
+#forecast-weather-card-img img {
+    width: 90px;
+}
+
+#forecast-weather-card-max-temp {
+    font-size: 36px;
+    color: #ad002b;
+}
+
+#forecast-weather-card-min-temp {
+    font-size: 28px;
+    color: #0080ab;
+}
+
+#forecast-weather-card-rain {
+    display: flex;
+    font-size: 24px;
+}
+
+#forecast-weather-card-rain img {
+    width: 18px;
+}
+/* Section end: forecast weather */
+
