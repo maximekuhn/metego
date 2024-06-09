@@ -12,7 +12,7 @@ templ Calendar(birthdays []*calendar.Birthday) {
 }
 
 templ CalendarEvents(birthdays []*calendar.Birthday) {
-	<div class="calendar-events">
+	<div id="calendar-events">
 		if birthdays == nil || len(birthdays) == 0 {
 			<p>
 				Pas d'évènement aujourd'hui...
