@@ -8,3 +8,6 @@ bin/
 
 # sqlite3 db
 metego.sqlite3
+
+# jetbrains IDE
+.idea/

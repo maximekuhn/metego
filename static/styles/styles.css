@@ -34,7 +34,6 @@
 
 /* Section start: current weather */
 #current-weather-card {
-    background-color: #FEFFD2;
     border-radius: 25px;
     border: 2px solid #FFBF78;
     width: 500px;
@@ -92,6 +91,7 @@
     display: flex;
     justify-content: space-between;
     padding: 10px;
+    height: 291px;
 }
 
 #forecast-weather {
@@ -102,6 +102,9 @@
 
 #forecast-weather-card {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
 
 #forecast-weather-card-date {
