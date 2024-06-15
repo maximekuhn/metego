@@ -69,7 +69,6 @@
 
 #current-weather {
     padding-top: 25px;
-    padding-left: 25px;
     width: fit-content;
 }
 
@@ -78,9 +77,39 @@
 }
 /* Section end: current weather */
 
+/* Section start: today metrics */
+#today-metrics {
+    padding-top: 25px;
+    font-size: 48px;
+}
+
+#today-metrics-comp {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#today-metrics-pressure, #today-metrics-wind-speed, #today-metrics-sunset-sunrise {
+    border: 2px solid #FFBF78;
+    border-radius: 25px;
+    width: 300px;
+    text-align: center;
+    height: 120px;
+}
+
+#today-metrics-pressure, #today-metrics-wind-speed {
+    line-height: 120px;
+}
+
+#today-metrics img {
+    width: 35px;
+}
+
+/* Section end: today metrics */
+
 /* Section start: current/forecast weather row */
 #current-weather-forecast {
     display: flex;
+    justify-content: space-evenly;
 }
 /* Section end: current/forecast weather row */
 

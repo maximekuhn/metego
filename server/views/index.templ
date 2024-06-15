@@ -25,9 +25,14 @@ templ Index(city string) {
 							@ForecastWeather(city)
 						</div>
 					</div>
+					<!-- Today metrics -->
+					<div id="today-metrics">
+						@TodayMetrics(city)
+					</div>
 					<!-- Today events (birthdays, ...) -->
-					<div id="today-events"></div>
-					@Calendar(nil)
+					<div id="today-events">
+						@Calendar(nil)
+					</div>
 				</div>
 			</div>
 		</body>

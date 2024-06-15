@@ -5,6 +5,8 @@ package openweatherapi
 type owCurrent struct {
 	Weather []owCurrentWeather `json:"weather"`
 	Main    owCurrentMain      `json:"main"`
+	Wind    owCurrentWind      `json:"wind"`
+	Sys     owCurrentSys       `json:"sys"`
 }
 
 type owCurrentWeather struct {
@@ -17,6 +19,15 @@ type owCurrentMain struct {
 	FeelsLike float64 `json:"feels_like"`
 	Pressure  float64 `json:"pressure"`
 	Humidity  float64 `json:"humidity"`
+}
+
+type owCurrentWind struct {
+	Speed float64 `json:"speed"`
+}
+
+type owCurrentSys struct {
+	Sunset  int64 `json:"sunset"`
+	Sunrise int64 `json:"sunrise"`
 }
 
 // -- section: open weather API Geocoding
@@ -35,10 +46,10 @@ type owForecast struct {
 }
 
 type owForecastData struct {
-	Timestamp int64                 `json:"dt"`
-	Main      owForecastDataMain    `json:"main"`
+	Timestamp int64                   `json:"dt"`
+	Main      owForecastDataMain      `json:"main"`
 	Weather   []owForecastDataWeather `json:"weather"`
-	Pop       float64               `json:"pop"`
+	Pop       float64                 `json:"pop"`
 }
 
 type owForecastDataMain struct {

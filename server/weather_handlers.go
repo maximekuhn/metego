@@ -41,6 +41,26 @@ func (s *Server) currentWeatherHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// GET /api/weather/current/metrics?city=...
+func (s *Server) currentMetricsWeatherHandler(w http.ResponseWriter, r *http.Request) {
+	city := r.URL.Query().Get("city")
+	slog.Info("GET /api/weather/current/metrics", slog.String("city", city))
+	currentWeather, err := s.state.fetcher.FetchCurrent(city)
+	if err != nil {
+		slog.Error("failed to get current weather", slog.String("err_msg", err.Error()))
+		// TODO: check err, maybe it's the user's fault
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	todayMetricsComp := views.TodayMetricsComp(currentWeather)
+	w.Header().Add("Content-Type", "text/html")
+	err = todayMetricsComp.Render(r.Context(), w)
+	if err != nil {
+		slog.Error("failed to render TodayMetricsComp", slog.String("err_msg", err.Error()))
+	}
+}
+
 // GET /api/weather/forecast?city=...&days=...
 func (s *Server) handleGetForecastWeather(w http.ResponseWriter, r *http.Request) {
 	queryParams := r.URL.Query()

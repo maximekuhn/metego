@@ -4,6 +4,10 @@ This project contains the code of my weather station. It is intended to run on a
 (model 3B+), with an external display. It is not guaranteed that it will work and/or display in a correct
 way on yours.
 
+- [ ] make it work
+- [ ] make it pretty
+- [ ] make it work again
+
 ## Tech stack
 - Golang
 - templ

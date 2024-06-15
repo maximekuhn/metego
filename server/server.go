@@ -24,6 +24,7 @@ func (s *Server) Start() error {
 	// weather routes
 	http.HandleFunc("GET /weather/{city}", s.weatherHandler)
 	http.HandleFunc("GET /api/weather/current/", s.currentWeatherHandler)
+	http.HandleFunc("GET /api/weather/current/metrics", s.currentMetricsWeatherHandler)
 	http.HandleFunc("GET /api/weather/forecast/", s.handleGetForecastWeather)
 
 	// birthdays routes

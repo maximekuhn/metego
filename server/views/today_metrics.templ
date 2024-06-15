@@ -1,0 +1,57 @@
+package views
+
+import "github.com/maximekuhn/metego/weather"
+import "fmt"
+import "time"
+
+// TODO: we need to query metrics for today twice
+// change it to limit API  calls
+templ TodayMetrics(city string) {
+	// get current weather every 10 minutes
+	<div hx-get={ fmt.Sprintf("/api/weather/current/metrics?city=%s", city) } hx-trigger="load, every 600s" hx-swap="innerHTML" id="today-metrics-container">
+		@TodayMetricsComp(nil)
+	</div>
+}
+
+templ TodayMetricsComp(current *weather.CurrentWeather) {
+if current != nil {
+    <div id="today-metrics-comp">
+		@Pressure(current.Pressure)
+		@WindSpeed(current.WindSpeed)
+		@SunsetSunrise(current.Sunset, current.Sunrise)
+	</div>
+} else {
+		<div>
+			<p>Oops ... :/</p>
+		</div>
+}
+}
+
+templ Pressure(pressure float64) {
+<div id="today-metrics-pressure">
+	<img src="/static/images/weather_icons/pressure.png" alt="atmospheric pressure"/>
+	{fmt.Sprintf("%d", int(pressure))} hPa</div>
+}
+
+templ WindSpeed(speed float64) {
+<div id="today-metrics-wind-speed">
+	<img src="/static/images/weather_icons/wind-speed.png" alt="wind speed"/>
+	{fmt.Sprintf("%.1f", speed)} km/h
+</div>
+}
+
+templ SunsetSunrise(sunset, sunrise int64) {
+<div id="today-metrics-sunset-sunrise">
+	<div id="today-metrics-sunset">
+		<img src="/static/images/weather_icons/sunrise.png" alt="sunrise"/>
+		{timestampToDate(sunrise)}</div>
+	<div id="today-metrics-sunrise">
+		<img src="/static/images/weather_icons/sunset.png" alt="sunset"/>
+		{timestampToDate(sunset)}</div>
+</div>
+}
+
+func timestampToDate(timestamp int64) string {
+t := time.Unix(timestamp, 0)
+return fmt.Sprintf("%d:%d", t.Hour(), t.Minute())
+}
