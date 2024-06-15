@@ -10,6 +10,10 @@
     font-family: "Virgil";
 }
 
+body {
+    cursor: none;
+}
+
 /* Section start: Menu */
 #menu {
     background-color: #FFEEA9;
@@ -165,6 +169,12 @@
 /* Section end: forecast weather */
 
 /* Section start: calendar events*/
+#today-events {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
 #calendar-events {
     height: 50px;
     overflow: hidden;
