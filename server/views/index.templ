@@ -8,6 +8,7 @@ templ Index(city string) {
 			<meta charset="UTF-8"/>
 			<link rel="stylesheet" href="/static/styles/styles.css"/>
 			<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+			<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 		</head>
 		<body>
 			<div>
@@ -15,6 +16,7 @@ templ Index(city string) {
 					<div id="main-menu">
 						@MenuBar(city)
 					</div>
+					<div id="qrcode"></div>
 					<!-- Current (daily) weather -->
 					<div id="current-weather-forecast">
 						<div id="current-weather">

@@ -27,7 +27,7 @@ func (s *SQLiteBirthdayStorage) Save(b *calendar.Birthday) error {
 	_, err := s.db.Exec(
 		"INSERT INTO birthdays (name, date) VALUES (?, ?)",
 		b.Name,
-		fmt.Sprintf("%02d/%02d", b.Date.Month, b.Date.Day),
+		fmt.Sprintf("%d/%d", b.Date.Month, b.Date.Day),
 	)
 
 	if err != nil {
@@ -46,7 +46,7 @@ func (s *SQLiteBirthdayStorage) Save(b *calendar.Birthday) error {
 func (s *SQLiteBirthdayStorage) GetAllForDate(month time.Month, day uint8) ([]*calendar.Birthday, error) {
 	rows, err := s.db.Query(
 		"SELECT name, date FROM birthdays WHERE date = ?",
-		fmt.Sprintf("%02d/%02d", month, day),
+		fmt.Sprintf("%d/%d", month, day),
 	)
 	if err != nil {
 		return nil, err

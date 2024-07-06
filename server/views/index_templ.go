@@ -23,7 +23,7 @@ func Index(city string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html><head><title>METEGO</title><meta charset=\"UTF-8\"><link rel=\"stylesheet\" href=\"/static/styles/styles.css\"><script src=\"https://unpkg.com/htmx.org@1.9.12\"></script></head><body><div><div id=\"main-container\"><div id=\"main-menu\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html><head><title>METEGO</title><meta charset=\"UTF-8\"><link rel=\"stylesheet\" href=\"/static/styles/styles.css\"><script src=\"https://unpkg.com/htmx.org@1.9.12\"></script><script src=\"https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js\"></script></head><body><div><div id=\"main-container\"><div id=\"main-menu\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -31,7 +31,7 @@ func Index(city string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><!-- Current (daily) weather --><div id=\"current-weather-forecast\"><div id=\"current-weather\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><div id=\"qrcode\"></div><!-- Current (daily) weather --><div id=\"current-weather-forecast\"><div id=\"current-weather\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -19,8 +19,28 @@ templ MenuBar(city string) {
                 document.getElementById("menu-time").innerText = frenchTime;
             }
 
+            function toggleQRCode() {
+                if (document.getElementById("qrcode").innerHTML === "") {
+                    const url = new URL(window.location.href);
+                    const baseUrl = `${url.protocol}//${url.hostname}${url.port ? ':' + url.port : ''}`;
+                    const adminUrl = `${baseUrl}/admin`;
+                    console.log(adminUrl);
+                    new QRCode(document.getElementById("qrcode"), {
+                        text: adminUrl,
+                        width: 256,
+                        height: 256
+                    });
+                } else {
+                    document.getElementById("qrcode").innerHTML = ""; 
+                }
+            }
+
+            // date update
             updateDateTime();
             setInterval(updateDateTime, 1000);
+
+            // QR code
+            document.getElementById("menu-settings").addEventListener("click", toggleQRCode);
         </script>
 	</div>
 }
