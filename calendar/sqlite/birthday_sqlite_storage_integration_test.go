@@ -31,7 +31,7 @@ func TestSaveBd(t *testing.T) {
 	}
 	defer db.Close()
 
-	sut, err := NewSQliteBdayStorage(db)
+	sut, err := NewSQLiteBirthdayStorage(db)
 	if err != nil {
 		t.Errorf("failed to create sqlite birthday storage: %s", err)
 		return
@@ -62,7 +62,7 @@ func TestSaveBdDuplicate(t *testing.T) {
 	}
 	defer db.Close()
 
-	sut, err := NewSQliteBdayStorage(db)
+	sut, err := NewSQLiteBirthdayStorage(db)
 	if err != nil {
 		t.Errorf("failed to create sqlite birthday storage: %s", err)
 		return
@@ -105,7 +105,7 @@ func TestGetAll(t *testing.T) {
 	}
 	defer db.Close()
 
-	sut, err := NewSQliteBdayStorage(db)
+	sut, err := NewSQLiteBirthdayStorage(db)
 	if err != nil {
 		t.Errorf("failed to create sqlite birthday storage: %s", err)
 		return

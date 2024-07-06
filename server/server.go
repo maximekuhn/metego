@@ -11,9 +11,9 @@ type Server struct {
 	state *state
 }
 
-func NewServer(fetcher weather.Fetcher, storage calendar.BirthdayStorage) *Server {
+func NewServer(fetcher weather.Fetcher, bdaysStorage calendar.BirhtdayStorage) *Server {
 	return &Server{
-		state: NewState(fetcher, storage),
+		state: NewState(fetcher, bdaysStorage),
 	}
 }
 

@@ -6,13 +6,13 @@ import (
 )
 
 type state struct {
-	fetcher weather.Fetcher
-	storage calendar.BirthdayStorage
+	fetcher      weather.Fetcher
+	bdaysStorage calendar.BirhtdayStorage
 }
 
-func NewState(fetcher weather.Fetcher, storage calendar.BirthdayStorage) *state {
+func NewState(fetcher weather.Fetcher, bdaysStorage calendar.BirhtdayStorage) *state {
 	return &state{
-		fetcher: fetcher,
-		storage: storage,
+		fetcher:      fetcher,
+		bdaysStorage: bdaysStorage,
 	}
 }

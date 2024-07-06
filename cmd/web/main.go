@@ -37,13 +37,13 @@ func main() {
 		return
 	}
 
-	storage, err := sqlite.NewSQliteBdayStorage(db)
+	bdaysStorage, err := sqlite.NewSQLiteBirthdayStorage(db)
 	if err != nil {
 		fmt.Println("failed to create birthday storage")
 		return
 	}
 
-	server := server.NewServer(fetcher, storage)
+	server := server.NewServer(fetcher, bdaysStorage)
 	if err := server.Start(); err != nil {
 		fmt.Println(err)
 	}

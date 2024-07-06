@@ -14,7 +14,7 @@ import (
 func (s *Server) birthdaysHandler(w http.ResponseWriter, r *http.Request) {
 	slog.Info("GET /birthdays")
 
-	bdays, err := s.state.storage.GetAll(1000, 0)
+	birhtdays, err := s.state.bdaysStorage.GetAll(1000, 0)
 	if err != nil {
 		slog.Error(
 			"failed to get birthdays from db",
@@ -24,7 +24,7 @@ func (s *Server) birthdaysHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	birthdaysPage := views.Birthdays(bdays)
+	birthdaysPage := views.Birthdays(birhtdays)
 
 	w.Header().Add("Content-Type", "text/html")
 
@@ -63,8 +63,9 @@ func (s *Server) handleCreateBirthday(w http.ResponseWriter, r *http.Request) {
 	// TODO: validation
 	bday := calendar.NewBirthday(name, time.Month(m), uint8(d))
 
-	err = s.state.storage.Save(bday)
+	err = s.state.bdaysStorage.Save(bday)
 	if err != nil {
+		// TODO: check error type
 		slog.Error("failed to save bday", slog.String("err_msg", err.Error()))
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
@@ -79,14 +80,14 @@ func (s *Server) handleGetTodayBirthdays(w http.ResponseWriter, r *http.Request)
 	day := now.Day()
 	month := now.Month()
 
-	birthdays, err := s.state.storage.GetAllForDate(month, uint8(day))
+	birhtdays, err := s.state.bdaysStorage.GetAllForDate(month, uint8(day))
 	if err != nil {
 		slog.Error("failed to get otday birthdays", slog.String("err_msg", err.Error()))
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	calendarEvents := views.CalendarEvents(birthdays)
+	calendarEvents := views.CalendarEvents(birhtdays)
 	w.Header().Add("Content-Type", "text/html")
 
 	err = calendarEvents.Render(r.Context(), w)

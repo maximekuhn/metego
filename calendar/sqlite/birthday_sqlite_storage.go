@@ -11,19 +11,19 @@ import (
 	"github.com/maximekuhn/metego/calendar"
 )
 
-type SQLiteBdayStorage struct {
+type SQLiteBirthdayStorage struct {
 	db *sql.DB
 }
 
-func NewSQliteBdayStorage(db *sql.DB) (*SQLiteBdayStorage, error) {
-	return &SQLiteBdayStorage{
+func NewSQLiteBirthdayStorage(db *sql.DB) (*SQLiteBirthdayStorage, error) {
+	return &SQLiteBirthdayStorage{
 		db: db,
 	}, nil
 }
 
 // save the birthday
 // if the same birthday already exists, an error is returned
-func (s *SQLiteBdayStorage) Save(b *calendar.Birthday) error {
+func (s *SQLiteBirthdayStorage) Save(b *calendar.Birthday) error {
 	_, err := s.db.Exec(
 		"INSERT INTO birthdays (name, date) VALUES (?, ?)",
 		b.Name,
@@ -43,7 +43,7 @@ func (s *SQLiteBdayStorage) Save(b *calendar.Birthday) error {
 }
 
 // get all birthdays given the current date
-func (s *SQLiteBdayStorage) GetAllForDate(month time.Month, day uint8) ([]*calendar.Birthday, error) {
+func (s *SQLiteBirthdayStorage) GetAllForDate(month time.Month, day uint8) ([]*calendar.Birthday, error) {
 	rows, err := s.db.Query(
 		"SELECT name, date FROM birthdays WHERE date = ?",
 		fmt.Sprintf("%d/%d", month, day),
@@ -53,7 +53,7 @@ func (s *SQLiteBdayStorage) GetAllForDate(month time.Month, day uint8) ([]*calen
 	}
 	defer rows.Close()
 
-	bdays, err := convertRows(rows)
+	bdays, err := convertRowsBdays(rows)
 	if err != nil {
 		return nil, err
 	}
@@ -61,7 +61,7 @@ func (s *SQLiteBdayStorage) GetAllForDate(month time.Month, day uint8) ([]*calen
 	return bdays, nil
 }
 
-func (s *SQLiteBdayStorage) GetAll(limit, offset int) ([]*calendar.Birthday, error) {
+func (s *SQLiteBirthdayStorage) GetAll(limit uint, offset int) ([]*calendar.Birthday, error) {
 	rows, err := s.db.Query(
 		"SELECT name, date FROM birthdays LIMIT ? OFFSET ?",
 		limit,
@@ -72,7 +72,7 @@ func (s *SQLiteBdayStorage) GetAll(limit, offset int) ([]*calendar.Birthday, err
 	}
 	defer rows.Close()
 
-	bdays, err := convertRows(rows)
+	bdays, err := convertRowsBdays(rows)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func (s *SQLiteBdayStorage) GetAll(limit, offset int) ([]*calendar.Birthday, err
 	return bdays, nil
 }
 
-func convertRows(rows *sql.Rows) ([]*calendar.Birthday, error) {
+func convertRowsBdays(rows *sql.Rows) ([]*calendar.Birthday, error) {
 	bdays := make([]*calendar.Birthday, 0)
 	for rows.Next() {
 		var name string
