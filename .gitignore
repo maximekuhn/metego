@@ -11,3 +11,9 @@ metego.sqlite3
 
 # jetbrains IDE
 .idea/
+
+# vs code
+.vscode/
+
+# macOS
+.DS_Store
