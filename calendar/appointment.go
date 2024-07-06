@@ -30,7 +30,7 @@ type AppointmentStorage interface {
 	// dupicate is returned
 	Save(a *Appointment) error
 
-	GetAllForDate(d uint8, m time.Month, y uint8) ([]*Appointment, error)
+	GetAllForDate(d uint8, m time.Month, y uint) ([]*Appointment, error)
 
 	GetAll(limit uint8, offset int) ([]*Appointment, error)
 }

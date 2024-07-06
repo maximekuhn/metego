@@ -22,3 +22,15 @@ func (s *Server) handleRoot(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 }
+
+// GET /admin
+func (s *Server) handleAdmin(w http.ResponseWriter, r *http.Request) {
+	slog.Info("GET /admin")
+
+	adminPage := views.Admin()
+	err := adminPage.Render(r.Context(), w)
+	if err != nil {
+		slog.Error("failed to render Index page", slog.String("err_msg", err.Error()))
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+}

@@ -27,7 +27,7 @@ func (s *SQLiteBirthdayStorage) Save(b *calendar.Birthday) error {
 	_, err := s.db.Exec(
 		"INSERT INTO birthdays (name, date) VALUES (?, ?)",
 		b.Name,
-		fmt.Sprintf("%d/%d", b.Date.Month, b.Date.Day),
+		fmt.Sprintf("%02d/%02d", b.Date.Month, b.Date.Day),
 	)
 
 	if err != nil {
@@ -46,7 +46,7 @@ func (s *SQLiteBirthdayStorage) Save(b *calendar.Birthday) error {
 func (s *SQLiteBirthdayStorage) GetAllForDate(month time.Month, day uint8) ([]*calendar.Birthday, error) {
 	rows, err := s.db.Query(
 		"SELECT name, date FROM birthdays WHERE date = ?",
-		fmt.Sprintf("%d/%d", month, day),
+		fmt.Sprintf("%02d/%02d", month, day),
 	)
 	if err != nil {
 		return nil, err
@@ -84,12 +84,12 @@ func convertRowsBdays(rows *sql.Rows) ([]*calendar.Birthday, error) {
 	bdays := make([]*calendar.Birthday, 0)
 	for rows.Next() {
 		var name string
-		var dateStr string
-		if err := rows.Scan(&name, &dateStr); err != nil {
+		var date string
+		if err := rows.Scan(&name, &date); err != nil {
 			return nil, err
 		}
 
-		parts := strings.Split(dateStr, "/")
+		parts := strings.Split(date, "/")
 		if len(parts) != 2 {
 			return nil, fmt.Errorf("date is corrupted for %s", name)
 		}

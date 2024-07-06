@@ -1,7 +1,8 @@
+//go:build integration
+
 package sqlite
 
 import (
-	"database/sql"
 	"errors"
 	"fmt"
 	"os"
@@ -97,11 +98,11 @@ func TestGetAllFor(t *testing.T) {
 
 	// try to fetch
 	date, _ := time.Parse("2006-01-02", "2023-07-04")
-	apts, err := sut.GetAllForDate(uint8(date.Day()), date.Month(), uint8(date.Year()))
+	apts, err := sut.GetAllForDate(uint8(date.Day()), date.Month(), uint(date.Year()))
 	if err != nil {
 		t.Fatalf("failed to get appointments: %s", err)
 	}
-	if !contains("Appointment 4", apts) {
+	if !containsApt("Appointment 4", apts) {
 		t.Error("Appointment 4 is not here")
 	}
 	if len(apts) != 1 {
@@ -121,28 +122,11 @@ func fixturesAppoitments(sut *SQLiteAppointmentStorage) error {
 	return nil
 }
 
-func contains(name string, apts []*calendar.Appointment) bool {
+func containsApt(name string, apts []*calendar.Appointment) bool {
 	for _, apt := range apts {
 		if apt.Name == name {
 			return true
 		}
 	}
 	return false
-}
-
-func setupTmpDB(filePath string) (*sql.DB, error) {
-	db, err := sql.Open("sqlite3", filePath)
-	if err != nil {
-		return nil, err
-	}
-
-	if err = db.Ping(); err != nil {
-		return nil, errors.New(fmt.Sprintf("could not ping db: %s", err.Error()))
-	}
-
-	if err = ApplyMigrations(db); err != nil {
-		return nil, errors.New(fmt.Sprintf("could not apply migrations: %s", err.Error()))
-	}
-
-	return db, nil
 }

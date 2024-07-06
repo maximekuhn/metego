@@ -79,20 +79,31 @@ func (s *Server) handleGetTodayBirthdays(w http.ResponseWriter, r *http.Request)
 	now := time.Now()
 	day := now.Day()
 	month := now.Month()
+	year := now.Year()
 
 	birhtdays, err := s.state.bdaysStorage.GetAllForDate(month, uint8(day))
 	if err != nil {
-		slog.Error("failed to get otday birthdays", slog.String("err_msg", err.Error()))
+		slog.Error("failed to get today birthdays", slog.String("err_msg", err.Error()))
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
+	slog.Info("birthdays", slog.Int("count", len(birhtdays)))
 
-	calendarEvents := views.CalendarEvents(birhtdays)
+	// TODO: move this somewhere else
+	apts, err := s.state.aptsStorage.GetAllForDate(uint8(day), month, uint(year))
+	if err != nil {
+		slog.Error("failed to get today appointments", slog.String("err_msg", err.Error()))
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	slog.Info("appointments", slog.Int("count", len(apts)))
+
+	calendarEvents := views.CalendarEvents(birhtdays, apts)
 	w.Header().Add("Content-Type", "text/html")
 
 	err = calendarEvents.Render(r.Context(), w)
 	if err != nil {
-		slog.Error("failed to render Birthdays", slog.String("err_msg", err.Error()))
+		slog.Error("failed to render calendar", slog.String("err_msg", err.Error()))
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

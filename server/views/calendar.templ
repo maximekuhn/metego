@@ -4,21 +4,32 @@ import "fmt"
 import "strings"
 import "github.com/maximekuhn/metego/calendar"
 
-templ Calendar(birthdays []*calendar.Birthday) {
+templ Calendar(birthdays []*calendar.Birthday, appointments []*calendar.Appointment) {
 	// load events every 5 minutes
 	<div hx-get={ fmt.Sprintf("/api/birthdays") } hx-trigger="load, every 300s" hx-swap="innerHTML">
-		@CalendarEvents(birthdays)
+		@CalendarEvents(birthdays, appointments)
 	</div>
 }
 
-templ CalendarEvents(birthdays []*calendar.Birthday) {
+templ CalendarEvents(birthdays []*calendar.Birthday, appointments []*calendar.Appointment) {
 	<div id="calendar-events">
-		if birthdays == nil || len(birthdays) == 0 {
+		if (birthdays == nil || len(birthdays) == 0) && (appointments == nil || len(appointments) == 0) {
 			<p>
 				Pas d'évènement aujourd'hui...
 			</p>
 		} else {
-			<p><span>Anniversaire</span><span>{ createBirthdaysString(birthdays) }</span></p>
+			<p>
+			if len(birthdays) > 0 {
+				<span>Anniversaire</span>
+				<span>{ createBirthdaysString(birthdays) }</span>
+			}
+			if len(appointments) > 0 {
+				if len(birthdays) > 0 {
+					<span>--</span>
+				}
+				<span>{ createAppointmentsString(appointments) }</span>
+			}
+			</p>
 		}
 	</div>
 }
@@ -30,4 +41,12 @@ func createBirthdaysString(birthdays []*calendar.Birthday) string {
 	}
 
 	return strings.Join(names, " ")
+}
+
+func createAppointmentsString(appointments []*calendar.Appointment) string {
+	apts := make([]string, len(appointments))
+	for _, apt := range appointments {
+		apts = append(apts, fmt.Sprintf("%s à %02dh%02d", apt.Name, apt.Date.Hour(), apt.Date.Minute()))
+	}
+	return strings.Join(apts, " ")
 }

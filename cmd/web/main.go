@@ -43,7 +43,9 @@ func main() {
 		return
 	}
 
-	server := server.NewServer(fetcher, bdaysStorage)
+	aptsStorage := sqlite.NewSQLiteAppointmentStorage(db)
+
+	server := server.NewServer(fetcher, bdaysStorage, aptsStorage)
 	if err := server.Start(); err != nil {
 		fmt.Println(err)
 	}

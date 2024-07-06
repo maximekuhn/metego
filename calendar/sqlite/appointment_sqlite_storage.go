@@ -3,7 +3,6 @@ package sqlite
 import (
 	"database/sql"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/mattn/go-sqlite3"
@@ -42,7 +41,7 @@ func (s *SQLiteAppointmentStorage) Save(a *calendar.Appointment) error {
 	return nil
 }
 
-func (s *SQLiteAppointmentStorage) GetAllForDate(d uint8, m time.Month, y uint8) ([]*calendar.Appointment, error) {
+func (s *SQLiteAppointmentStorage) GetAllForDate(d uint8, m time.Month, y uint) ([]*calendar.Appointment, error) {
 	rows, err := s.db.Query(
 		"SELECT name, date FROM appointments WHERE date >= ?",
 		fmt.Sprintf("%04d-%02d-%02d", y, m, d),
@@ -60,7 +59,7 @@ func (s *SQLiteAppointmentStorage) GetAllForDate(d uint8, m time.Month, y uint8)
 	// is very sub-optimal
 	appointments := make([]*calendar.Appointment, 0)
 	for _, apt := range apts {
-		if uint8(apt.Date.Year()) != y {
+		if uint(apt.Date.Year()) != y {
 			continue
 		}
 
@@ -80,7 +79,7 @@ func (s *SQLiteAppointmentStorage) GetAllForDate(d uint8, m time.Month, y uint8)
 
 func (s *SQLiteAppointmentStorage) GetAll(limit uint8, offset int) ([]*calendar.Appointment, error) {
 	rows, err := s.db.Query(
-		"SELECT name, date FROM appointments LIMIT %d OFFSET %d",
+		"SELECT name, date FROM appointments LIMIT ? OFFSET ?",
 		limit,
 		offset,
 	)
@@ -107,7 +106,7 @@ func convertRowsApts(rows *sql.Rows) ([]*calendar.Appointment, error) {
 		}
 
 		// keep only date, ignore time
-		date, err := time.Parse("2006-01-02", strings.Fields(dateStr)[0])
+		date, err := time.Parse("2006-01-02 15:04:05-07:00", dateStr)
 		if err != nil {
 			return nil, err
 		}

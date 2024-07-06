@@ -1,0 +1,74 @@
+package views
+
+import "github.com/maximekuhn/metego/calendar"
+import "time"
+
+templ Appointments(apts []*calendar.Appointment) {
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<title>METEGO</title>
+			<meta charset="UTF-8"/>
+			<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+		</head>
+		<body>
+			<h1>Appointments admin</h1>
+			<h2>Add an appointment</h2>
+			@CreateAppointmentForm()
+			<h2>All appointments</h2>
+            for _, apt := range apts {
+                @AppointmentCard(apt)
+            }
+		</body>
+	</html>
+}
+
+templ AppointmentCard(apt *calendar.Appointment) {
+	<div>
+		<ul>
+			<li>
+			{ apt.Name }
+			{ apt.Date.Format(time.RFC3339) }
+			</li>
+		</ul>
+	</div>
+}
+
+templ CreateAppointmentForm() {
+	<div>
+		<form hx-post="/api/appointments" hx-swap="none" id="form-create-appointment">
+			<label for="name">Name:</label>
+			<input type="text" id="name" name="name" required/>
+			<br/>
+			<br/>
+			<label for="day">Day:</label>
+			<input type="number" min="1" max="31" id="day" name="day" required/>
+			<br/>
+			<br/>
+			<label for="month">Month:</label>
+			<input type="number" min="1" max="12" id="month" name="month" required/>
+			<br/>
+			<br/>
+			<label for="year">Year:</label>
+			<input type="number" min="2024" max="9999" id="year" name="year" required/>
+			<br/>
+			<br/>
+			<label for="hour">Hour:</label>
+			<input type="number" min="0" max="24" id="hour" name="hour" required/>
+			<br/>
+			<br/>
+			<label for="minute">Minute:</label>
+			<input type="number" min="0" max="60" id="minute" name="minute" required/>
+			<br/>
+			<br/>
+			<button type="submit">Submit</button>
+		</form>
+		<script>
+            document.getElementById("form-create-appointment").addEventListener("htmx:afterSwap", function(event) {
+                if (event.detail.xhr.status === 200) {
+                    window.location.reload();
+                }
+            });
+        </script>
+	</div>
+}

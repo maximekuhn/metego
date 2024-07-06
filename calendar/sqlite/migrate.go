@@ -21,7 +21,7 @@ func createBirhtdaysTable(db *sql.DB) error {
     CREATE TABLE IF NOT EXISTS birthdays (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
-        date DATE,
+        date TEXT,
         UNIQUE (name, date)
     )
     `

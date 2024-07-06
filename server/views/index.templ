@@ -29,9 +29,9 @@ templ Index(city string) {
 					<div id="today-metrics">
 						@TodayMetrics(city)
 					</div>
-					<!-- Today events (birthdays, ...) -->
+					<!-- Today events (birthdays, appointments ...) -->
 					<div id="today-events">
-						@Calendar(nil)
+						@Calendar(nil, nil)
 					</div>
 				</div>
 			</div>

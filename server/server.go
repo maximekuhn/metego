@@ -11,15 +11,16 @@ type Server struct {
 	state *state
 }
 
-func NewServer(fetcher weather.Fetcher, bdaysStorage calendar.BirhtdayStorage) *Server {
+func NewServer(fetcher weather.Fetcher, bdaysStorage calendar.BirhtdayStorage, aptsStorage calendar.AppointmentStorage) *Server {
 	return &Server{
-		state: NewState(fetcher, bdaysStorage),
+		state: NewState(fetcher, bdaysStorage, aptsStorage),
 	}
 }
 
 func (s *Server) Start() error {
 	// index routes
 	http.HandleFunc("GET /", s.handleRoot)
+	http.HandleFunc("GET /admin", s.handleAdmin)
 
 	// weather routes
 	http.HandleFunc("GET /weather/{city}", s.weatherHandler)
@@ -31,6 +32,10 @@ func (s *Server) Start() error {
 	http.HandleFunc("GET /birthdays", s.birthdaysHandler)
 	http.HandleFunc("GET /api/birthdays", s.handleGetTodayBirthdays)
 	http.HandleFunc("POST /api/birthdays", s.handleCreateBirthday)
+
+	// appointments routes
+	http.HandleFunc("GET /appointments", s.appointmentsHandler)
+	http.HandleFunc("POST /api/appointments", s.handleCreateAppointment)
 
 	// static files
 	http.Handle("GET /static/", http.StripPrefix("/static", http.FileServer(http.Dir("./static"))))

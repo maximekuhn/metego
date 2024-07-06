@@ -26,8 +26,10 @@ templ Birthdays(bdays []*calendar.Birthday) {
 templ BirthdayCard(bday *calendar.Birthday) {
 	<div>
 		<ul>
-			<li>{ bday.Name }</li>
-			<li>{ fmt.Sprintf("%d", bday.Date.Day) } { bday.Date.Month.String() }</li>
+			<li>
+			{ bday.Name }
+			{ fmt.Sprintf("%d", bday.Date.Day) } { bday.Date.Month.String() }
+			</li>
 		</ul>
 	</div>
 }
