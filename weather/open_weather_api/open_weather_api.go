@@ -203,6 +203,7 @@ func (f *OpenWeatherFetcher) fetchForecast(city string) (*owForecast, error) {
 
 // fetch city coordinates
 // if coords are not found, then an error is returned
+// https://openweathermap.org/api/geocoding-api
 func (f *OpenWeatherFetcher) fetchCityCoords(city string) (*owCityCoords, error) {
 	url := fmt.Sprintf(
 		"https://api.openweathermap.org/geo/1.0/direct?q=%s&appid=%s",

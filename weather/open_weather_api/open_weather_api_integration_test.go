@@ -66,7 +66,7 @@ func TestFetchCityCoordsImaginary(t *testing.T) {
 		t.Fatalf("got city coords but expected error")
 	}
 
-	expectedErrMsg := "no coordinates found"
+	expectedErrMsg := "failed to GET city coords"
 	actualErrMsg := err.Error()
 	if actualErrMsg != expectedErrMsg {
 		t.Fatalf("want %s got %s", expectedErrMsg, actualErrMsg)
