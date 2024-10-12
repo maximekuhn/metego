@@ -1,5 +1,3 @@
-# https://taskfile.dev
-
 version: '3'
 
 tasks:
@@ -42,6 +40,7 @@ tasks:
     cmds:
       - go clean
       - rm -rf bin/
+      - rm ./server/views/*_templ.go
 
   fmt:
     desc: Format go code
