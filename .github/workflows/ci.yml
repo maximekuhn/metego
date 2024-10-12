@@ -11,19 +11,62 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  GO_VERSION: "1.22"
-  GO_TEMPL_VERSION: "0.2.778"
+  GO_VERSION: "1.22.3"
+  GO_TASK_VERSION: "v3.39.2"
+  GO_TEMPL_VERSION: "v0.2.778"
+  GO_CI_LINT_VERSION: "v1.61"
 
 jobs:
-  lint:
+  fmtcheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: maximekuhn/metego/.github/workflows/install-tools.ci
-        with:
-          go-version: ${{ env.GO_VERSION }}
-          go-templ-version: ${{ env.GO_TEMPL_VERSION }}
-      # TODO: actually run linter
-      
+      - run: ./ci/install_tools.sh ${{ env.GO_VERSION }} ${{ env.GO_TASK_VERSION }} ${{ env.GO_TEMPL_VERSION }}
+      - run: echo "$HOME/go/bin" >> "$GITHUB_PATH"
+      - shell: bash
+        run: |
+          [ $(task fmtcheck | wc -l) -eq 0 ] && exit 0 || exit 1
 
+  build:
+    runs-on: ubuntu-latest
+    needs: [fmtcheck]
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./ci/install_tools.sh ${{ env.GO_VERSION }} ${{ env.GO_TASK_VERSION }} ${{ env.GO_TEMPL_VERSION }}
+      - run: echo "$HOME/go/bin" >> "$GITHUB_PATH"
+      - run: task build
+
+  lint:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./ci/install_tools.sh ${{ env.GO_VERSION }} ${{ env.GO_TASK_VERSION }} ${{ env.GO_TEMPL_VERSION }}
+      - run: echo "$HOME/go/bin" >> "$GITHUB_PATH"
+      - run: task build
+      # not sure why, but it requires to do this before running the linter
+      - run: go mod tidy && go mod vendor
+      - uses: golangci/golangci-lint-action@v6
+        with:
+          version: ${{ env.GO_CI_LINT_VERSION }}
+
+  test:
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./ci/install_tools.sh ${{ env.GO_VERSION }} ${{ env.GO_TASK_VERSION }} ${{ env.GO_TEMPL_VERSION }}
+      - run: echo "$HOME/go/bin" >> "$GITHUB_PATH"
+      - run: task test
+
+      - name: Create .env.integration
+        env:
+          OPEN_WEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+        run: echo "OPEN_WEATHER_API_KEY=$OPEN_WEATHER_API_KEY" > .env.integration
+
+      - run: task test-integration
+
+
+# TODO:
+# - use cache between jobs, for example build should cache output and lint should restore it
 
