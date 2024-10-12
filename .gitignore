@@ -17,3 +17,6 @@ metego.sqlite3
 
 # macOS
 .DS_Store
+
+# templ generated files
+*_templ.go
