@@ -1,0 +1,25 @@
+on:
+  workflow_call:
+    inputs:
+      go-version:
+        required: true
+        type: string
+      go-templ-version:
+        required: true
+        type: string
+
+jobs:
+  install:
+    steps:
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ inputs.go-version }}
+
+      - name: Install go-task
+        # https://taskfile.dev/installation/#install-script
+        run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+
+      - name: Install go-templ
+        run: go install github.com/a-h/templ/cmd/templ@${{ inputs.go-templ-version }}
+
+

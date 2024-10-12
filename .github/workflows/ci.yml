@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "**"
+
+# don't waste CI time by cancelling previous workflow on the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GO_VERSION: "1.22"
+  GO_TEMPL_VERSION: "0.2.778"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: maximekuhn/metego/.github/workflows/install-tools.ci
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          go-templ-version: ${{ env.GO_TEMPL_VERSION }}
+      # TODO: actually run linter
+      
+
+
