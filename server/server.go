@@ -49,6 +49,8 @@ func (s *Server) Start() error {
 	http.HandleFunc("GET /appointments", s.appointmentsHandler)
 	http.HandleFunc("POST /api/appointments", s.handleCreateAppointment)
 
+	// cities route
+
 	// static files
 	http.Handle("GET /static/", http.StripPrefix("/static", http.FileServer(http.Dir("./static"))))
 
