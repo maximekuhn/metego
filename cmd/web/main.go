@@ -10,7 +10,36 @@ import (
 	"github.com/maximekuhn/metego/calendar/sqlite"
 	"github.com/maximekuhn/metego/server"
 	openweatherapi "github.com/maximekuhn/metego/weather/open_weather_api"
+	"gopkg.in/yaml.v3"
 )
+
+// TODO:
+// - add db file path in configFile
+// - maybe add api key in the config
+// - use a flag to specify the config file path
+
+type configFile struct {
+	Cities []string `yaml:"cities"`
+}
+
+func readConfig() (*configFile, error) {
+	// TODO: read from a flag
+	const (
+		configFilePath string = "./config.metego.yaml"
+	)
+
+	buf, err := os.ReadFile(configFilePath)
+	if err != nil {
+		return nil, err
+	}
+
+	var cf configFile
+	if err := yaml.Unmarshal(buf, &cf); err != nil {
+		return nil, err
+	}
+
+	return &cf, nil
+}
 
 func main() {
 	err := godotenv.Load()
@@ -22,6 +51,18 @@ func main() {
 		panic("OPEN_WEATHER_API_KEY is empty")
 	}
 	fetcher := openweatherapi.NewOpenWeatherFetcher(apiKey)
+
+	conf, err := readConfig()
+	var cities []string
+	if err != nil {
+		fmt.Printf("could not read config file: '%s'\n", err)
+		fmt.Println("program will continue...")
+		cities = make([]string, 0)
+	} else {
+		fmt.Println("successfully parsed config file")
+		cities = conf.Cities
+	}
+	fmt.Printf("cities: %v\n", cities)
 
 	// TODO: read from conf
 	dbFilePath := "./metego.sqlite3"
@@ -45,7 +86,7 @@ func main() {
 
 	aptsStorage := sqlite.NewSQLiteAppointmentStorage(db)
 
-	server := server.NewServer(fetcher, bdaysStorage, aptsStorage)
+	server := server.NewServer(fetcher, bdaysStorage, aptsStorage, cities)
 	if err := server.Start(); err != nil {
 		fmt.Println(err)
 	}

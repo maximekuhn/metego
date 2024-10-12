@@ -11,9 +11,21 @@ type Server struct {
 	state *state
 }
 
-func NewServer(fetcher weather.Fetcher, bdaysStorage calendar.BirhtdayStorage, aptsStorage calendar.AppointmentStorage) *Server {
+// NewServer creates a new server :)
+//
+// The parameter `cities` is a list of pre-defined cities that will be used
+// when the user clicks on the city name in the menu bar.
+//
+// For instance, cities can be: ["Paris", "Berlin"].
+// If the app is running and the user click on "Paris", it will switch to "Berlin"
+func NewServer(
+	fetcher weather.Fetcher,
+	bdaysStorage calendar.BirhtdayStorage,
+	aptsStorage calendar.AppointmentStorage,
+	cities []string,
+) *Server {
 	return &Server{
-		state: NewState(fetcher, bdaysStorage, aptsStorage),
+		state: NewState(fetcher, bdaysStorage, aptsStorage, cities),
 	}
 }
 

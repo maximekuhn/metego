@@ -20,3 +20,6 @@ metego.sqlite3
 
 # templ generated files
 *_templ.go
+
+# config file
+config.metego.yaml
