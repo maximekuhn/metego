@@ -4,16 +4,16 @@ version: '3'
 
 tasks:
   test:
-  desc: Run unit tests
-  deps: [build]
-  cmds:
-    - go test -v ./...
+    desc: Run unit tests
+    deps: [build]
+    cmds:
+      - go test -v ./...
 
   test-integration:
-  desc: Run integration tests
-  deps: [build]
-  cmds:
-    - go test -tags=integration -v ./...
+    desc: Run integration tests
+    deps: [build]
+    cmds:
+      - go test -tags=integration -v ./...
 
   lint:
     desc: Run linter
