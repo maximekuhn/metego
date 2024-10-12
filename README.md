@@ -20,7 +20,8 @@ way on yours.
 - [templ](https://templ.guide)
 - [Docker](https://www.docker.com/)
     - mainly for cross compiling to Raspberry Pi
-- make
+- [go-task](https://taskfile.dev/installation/)
+    - build tool
 
 ## Installation on a Raspberry Pi
 ### Setup LCD screen 
@@ -35,7 +36,7 @@ sudo ./LCD7b-show
 ### Cross-compile
 On your computer, compile for raspberry Pi:
 ```shell
-make build_rpi
+task build-rpi
 ```
 > you need Docker up and running
 

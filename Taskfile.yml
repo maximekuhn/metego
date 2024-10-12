@@ -1,0 +1,54 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  test:
+  desc: Run unit tests
+  deps: [build]
+  cmds:
+    - go test -v ./...
+
+  test-integration:
+  desc: Run integration tests
+  deps: [build]
+  cmds:
+    - go test -tags=integration -v ./...
+
+  lint:
+    desc: Run linter
+    cmds:
+      - golangci-lint run
+
+  templ:
+    internal: true
+    cmds:
+      - templ generate
+
+  build:
+    desc: Build for current platform
+    deps: [templ]
+    cmds:
+      - go build -v -o bin/web cmd/web/main.go
+
+  build-rpi:
+    desc: Build for Raspberry PI
+    deps: [templ]
+    cmds:
+      - ./build/build_rpi.sh
+
+  clean:
+    desc: Clean project
+    cmds:
+      - go clean
+      - rm -rf bin/
+
+  fmt:
+    desc: Format go code
+    cmds:
+      - gofmt -l -s -w .
+
+  fmtCheck:
+    desc: Check if the go code is formatted
+    cmds:
+      - gofmt -l -s .
