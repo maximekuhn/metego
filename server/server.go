@@ -50,6 +50,7 @@ func (s *Server) Start() error {
 	http.HandleFunc("POST /api/appointments", s.handleCreateAppointment)
 
 	// cities route
+	http.HandleFunc("GET /city/next", s.changeCityHandler)
 
 	// static files
 	http.Handle("GET /static/", http.StripPrefix("/static", http.FileServer(http.Dir("./static"))))

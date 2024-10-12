@@ -2,7 +2,7 @@ package views
 
 templ MenuBar(city string) {
 	<div id="menu">
-		<div id="menu-city"><span>{ city }</span></div>
+		<div id="menu-city"><span id="current-city">{ city }</span></div>
 		<div id="menu-date"></div>
 		<div id="menu-time"></div>
 		<div id="menu-settings">Settings</div>
@@ -35,12 +35,37 @@ templ MenuBar(city string) {
                 }
             }
 
+            function nextCity(currentCity) {
+                fetch(`/city/next?current=${currentCity}`, {
+                    method: 'GET'
+                })
+                .then(response => {
+                    if (response.status !== 200) {
+                        throw new Error("response status is not 200 wtf");
+                        return;
+                    }
+                    return response.text();
+                })
+                .then(redirectURL => {
+                    window.location.href = redirectURL;
+                })
+                .catch(error => {
+                    console.error(`Failed to fetch next city: ${error}`);
+                });
+            }
+
             // date update
             updateDateTime();
             setInterval(updateDateTime, 1000);
 
             // QR code
             document.getElementById("menu-settings").addEventListener("click", toggleQRCode);
+
+            // next city
+            document.getElementById("current-city").addEventListener("click", function() {
+                const currentCity = this.textContent.trim();
+                nextCity(currentCity);
+            });
         </script>
 	</div>
 }

@@ -121,3 +121,5 @@ Edit the config:
 point-rpi
 chromium --start http://localhost:9004/weather/<YOUR_CITY>
 ```
+
+// TODO: update docs
