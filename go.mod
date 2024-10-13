@@ -1,6 +1,6 @@
 module github.com/maximekuhn/metego
 
-go 1.22.3
+go 1.23
 
 require (
 	github.com/a-h/templ v0.2.778
