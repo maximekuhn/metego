@@ -36,10 +36,8 @@ jobs:
         run: |
           tag_name=$(./ci/extract_tag.sh ${GITHUB_REF#refs/tags/})
           echo "extracted tag: $tag_name"
+          ./ci/validate_release.sh "$tag_name"
           echo "tag_name=$tag_name" >> "$GITHUB_OUTPUT"
-
-      # TODO: check if tag is correct (not existing, more recent, etc..)
-
 
   build_artifacts:
     name: Build and upload artifacts
