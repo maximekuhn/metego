@@ -65,8 +65,8 @@ jobs:
           name: ${{ env.STATIC_ARTIFACT_NAME }}
       - uses: softprops/action-gh-release@v2
         with:
-          files:
-            - web
-            - static
+          files: |
+            web
+            static
 
 # TODO: upload and download artifact could be optimised to upload once and download once
