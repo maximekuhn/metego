@@ -4,6 +4,7 @@ error() {
     local msg="$1"
     if [ -z "$msg" ]; then
         echo "error: no message provided"
+        exit 1
     fi
     echo "error: $msg"
     exit 1
@@ -22,8 +23,7 @@ validate_tag() {
 }
 
 get_latest_release_tag() {
-    latest_tag=$(curl -sL "https://github.com/maximekuhn/metego/releases/latest" | grep 'Raspberry Pi release' | tail -1 | sed -E 's/.*(v[0-9]+\.[0-9]+\.[0-9]+).*/\1/'
-)
+    latest_tag=$(curl -sL "https://github.com/maximekuhn/metego/releases/latest" | grep 'Raspberry Pi release' | tail -1 | sed -E 's/.*(v[0-9]+\.[0-9]+\.[0-9]+).*/\1/')
     echo "$latest_tag"
 }
 
@@ -43,8 +43,6 @@ compare_versions() {
 }
 
 validate_tag "$1"
-
 latest_tag=$(get_latest_release_tag "$1")
 echo "latest release tag: $latest_tag"
-
 compare_versions "$latest_tag" "$1"
