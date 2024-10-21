@@ -77,6 +77,6 @@ jobs:
           tag_name: ${{ env.TAG_NAME }}
           files: |
             web
-            static
+            static.zip
 
 # TODO: upload and download artifact could be optimised to upload once and download once
