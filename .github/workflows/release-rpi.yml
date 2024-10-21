@@ -20,13 +20,25 @@ env:
   GO_TASK_VERSION: "v3.39.2"
   GO_TEMPL_VERSION: "v0.2.778"
   GO_CI_LINT_VERSION: "v1.61"
+  STATIC_ARTIFACT_NAME: "metego-static"
+  BINARY_ARTIFACT_NAME: "metego-binary"
 
 jobs:
-  build:
+  build_artifacts:
+    name: Build and upload artifacts
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: ./ci/install_tools.sh ${{ env.GO_VERSION }} ${{ env.GO_TASK_VERSION }} ${{ env.GO_TEMPL_VERSION }}
       - run: echo "$HOME/go/bin" >> "$GITHUB_PATH"
       - run: task build-rpi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.STATIC_ARTIFACT_NAME }}
+          path: ./bin/rpi/web
+      - run: zip -r static.zip ./static 
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.STATIC_ARTIFACT_NAME }}
+          path: ./static.zip
 
