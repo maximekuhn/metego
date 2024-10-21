@@ -34,7 +34,7 @@ jobs:
       - run: task build-rpi
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.STATIC_ARTIFACT_NAME }}
+          name: ${{ env.BINARY_ARTIFACT_NAME }}
           path: ./bin/rpi/web
       - run: zip -r static.zip ./static 
       - uses: actions/upload-artifact@v4
