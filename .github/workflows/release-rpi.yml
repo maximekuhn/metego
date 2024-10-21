@@ -27,6 +27,7 @@ jobs:
   extract_tag:
     name: Extract tag
     needs: [extract_tag]
+    runs-on: ubuntu-latest
     steps:
       - run: echo "TODO"
 
