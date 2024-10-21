@@ -44,6 +44,7 @@ jobs:
 
   create_release:
     name: Retrieve artifacts and create release
+    needs: [build_artifacts]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
