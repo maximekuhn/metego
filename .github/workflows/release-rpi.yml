@@ -73,6 +73,7 @@ jobs:
       - run: ls -al
       - uses: softprops/action-gh-release@v2
         with:
+          name: "Raspberry Pi release - ${{ env.TAG_NAME }}"
           tag_name: ${{ env.TAG_NAME }}
           files: |
             web
