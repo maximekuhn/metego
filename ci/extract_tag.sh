@@ -7,7 +7,7 @@ extract_tag() {
         echo "error: empty input"
     fi
 
-    regex="^(v[1-9]\.[1-9]\.[1-9])-rc[1-9][0-9]?$"
+    regex="^(v[0-9]\.[0-9]\.[0-9])-rc[1-9][0-9]?$"
     if [[ $in =~ $regex ]]; then
         echo "${BASH_REMATCH[1]}"
     else
