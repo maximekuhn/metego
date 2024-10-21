@@ -28,6 +28,7 @@ jobs:
       tag_name: ${{ steps.validate_and_extract_tag.outputs.tag_name }}
 
     steps:
+      - uses: actions/checkout@v4
       - id: validate_and_extract_tag
         run: |
           tag_name=$(./ci/extract_tag.sh ${GITHUB_REF#refs/tags/})
