@@ -35,6 +35,8 @@ jobs:
           echo "extracted tag: $tag_name"
           echo "tag_name=$tag_name" >> "$GITHUB_OUTPUT"
 
+      # TODO: check if tag is correct (not existing, more recent, etc..)
+
 
   build_artifacts:
     name: Build and upload artifacts
@@ -62,13 +64,13 @@ jobs:
     env:
       TAG_NAME: ${{ needs.extract_tag.outputs.tag_name }}
     steps:
-      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: ${{ env.BINARY_ARTIFACT_NAME }}
       - uses: actions/download-artifact@v4
         with:
           name: ${{ env.STATIC_ARTIFACT_NAME }}
+      - run: ls -al
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.TAG_NAME }}
