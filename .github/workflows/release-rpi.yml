@@ -24,7 +24,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: ./ci/install_tools.sh ${{ env.GO_VERSION }} ${{ env.GO_TASK_VERSION }} ${{ env.GO_TEMPL_VERSION }}
