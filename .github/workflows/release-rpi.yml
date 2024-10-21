@@ -1,0 +1,33 @@
+# Steps:
+# - build for raspberry pi
+# - create release
+# - tag commit with correct version
+
+name: Release for Raspberry Pi
+
+on:
+  push:
+    # TODO: tmp for setup
+    branches:
+      - "**"
+    # tags:
+    #   # release candidate
+    #   # ex: v3.1.4-rc12
+    #   - "v[1-9].[1-9].[1-9]-rc[1-9][1-9]?"
+
+env:
+  GO_VERSION: "1.23"
+  GO_TASK_VERSION: "v3.39.2"
+  GO_TEMPL_VERSION: "v0.2.778"
+  GO_CI_LINT_VERSION: "v1.61"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./ci/install_tools.sh ${{ env.GO_VERSION }} ${{ env.GO_TASK_VERSION }} ${{ env.GO_TEMPL_VERSION }}
+      - run: echo "$HOME/go/bin" >> "$GITHUB_PATH"
+      - run: task build-rpi
+
