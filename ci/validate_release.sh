@@ -42,7 +42,9 @@ compare_versions() {
     fi
 }
 
-validate_tag "$1"
-latest_tag=$(get_latest_release_tag "$1")
+next_tag="$1"
+validate_tag "$next_tag"
+latest_tag=$(get_latest_release_tag)
 echo "latest release tag: $latest_tag"
-compare_versions "$latest_tag" "$1"
+compare_versions "$latest_tag" "$next_tag"
+
