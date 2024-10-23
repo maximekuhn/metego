@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/mattn/go-sqlite3"
-	"github.com/maximekuhn/metego/calendar"
+	"github.com/maximekuhn/metego/internal/calendar"
 )
 
 type SQLiteBirthdayStorage struct {

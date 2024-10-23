@@ -1,8 +1,8 @@
 package server
 
 import (
-	"github.com/maximekuhn/metego/calendar"
-	"github.com/maximekuhn/metego/weather"
+	"github.com/maximekuhn/metego/internal/calendar"
+	"github.com/maximekuhn/metego/internal/weather"
 )
 
 type state struct {

@@ -3,7 +3,7 @@ package openweatherapi
 import (
 	"testing"
 
-	"github.com/maximekuhn/metego/weather"
+	"github.com/maximekuhn/metego/internal/weather"
 )
 
 func TestConvertIconOk(t *testing.T) {

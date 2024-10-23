@@ -1,8 +1,10 @@
 package views
 
-import "github.com/maximekuhn/metego/weather"
-import "fmt"
-import "time"
+import (
+	"fmt"
+	"github.com/maximekuhn/metego/internal/weather"
+	"time"
+)
 
 templ ForecastWeather(city string) {
 	// get forecast weather every 2 hours

@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/maximekuhn/metego/server/views"
+	"github.com/maximekuhn/metego/internal/server/views"
 )
 
 // GET /weather/{city}

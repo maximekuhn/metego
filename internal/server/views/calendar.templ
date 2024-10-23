@@ -1,8 +1,10 @@
 package views
 
-import "fmt"
-import "strings"
-import "github.com/maximekuhn/metego/calendar"
+import (
+	"fmt"
+	"github.com/maximekuhn/metego/internal/calendar"
+	"strings"
+)
 
 templ Calendar(birthdays []*calendar.Birthday, appointments []*calendar.Appointment) {
 	// load events every 5 minutes
@@ -19,16 +21,16 @@ templ CalendarEvents(birthdays []*calendar.Birthday, appointments []*calendar.Ap
 			</p>
 		} else {
 			<p>
-			if len(birthdays) > 0 {
-				<span>Anniversaire</span>
-				<span>{ createBirthdaysString(birthdays) }</span>
-			}
-			if len(appointments) > 0 {
 				if len(birthdays) > 0 {
-					<span>--</span>
+					<span>Anniversaire</span>
+					<span>{ createBirthdaysString(birthdays) }</span>
 				}
-				<span>{ createAppointmentsString(appointments) }</span>
-			}
+				if len(appointments) > 0 {
+					if len(birthdays) > 0 {
+						<span>--</span>
+					}
+					<span>{ createAppointmentsString(appointments) }</span>
+				}
 			</p>
 		}
 	</div>

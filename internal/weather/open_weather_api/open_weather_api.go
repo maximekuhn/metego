@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/maximekuhn/metego/weather"
+	"github.com/maximekuhn/metego/internal/weather"
 )
 
 type OpenWeatherFetcher struct {
