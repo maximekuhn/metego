@@ -39,9 +39,14 @@ jobs:
           ./ci/validate_release.sh "$tag_name"
           echo "tag_name=$tag_name" >> "$GITHUB_OUTPUT"
 
+  checks:
+    name: Run checks
+    needs: [extract_tag]
+    uses: ./.github/workflows/ci.yml
+
   build_artifacts:
     name: Build and upload artifacts
-    needs: [extract_tag]
+    needs: [checks]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "**"
+  workflow_call:
 
 # don't waste CI time by cancelling previous workflow on the same branch
 concurrency:
