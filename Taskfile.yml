@@ -40,7 +40,7 @@ tasks:
     cmds:
       - go clean
       - rm -rf bin/
-      - rm ./server/views/*_templ.go
+      - rm ./internal/server/views/*_templ.go
 
   fmt:
     desc: Format go code

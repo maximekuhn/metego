@@ -137,7 +137,7 @@ func nearlyEquals(a, b, precision float64) bool {
 }
 
 func setup() (*OpenWeatherFetcher, error) {
-	err := godotenv.Load("../../.env.integration")
+	err := godotenv.Load("../../../.env.integration")
 	if err != nil {
 		return nil, err
 	}

@@ -1,7 +1,9 @@
 package views
 
-import "github.com/maximekuhn/metego/calendar"
-import "time"
+import (
+	"github.com/maximekuhn/metego/internal/calendar"
+	"time"
+)
 
 templ Appointments(apts []*calendar.Appointment) {
 	<!DOCTYPE html>
@@ -16,9 +18,9 @@ templ Appointments(apts []*calendar.Appointment) {
 			<h2>Add an appointment</h2>
 			@CreateAppointmentForm()
 			<h2>All appointments</h2>
-            for _, apt := range apts {
-                @AppointmentCard(apt)
-            }
+			for _, apt := range apts {
+				@AppointmentCard(apt)
+			}
 		</body>
 	</html>
 }
@@ -27,8 +29,8 @@ templ AppointmentCard(apt *calendar.Appointment) {
 	<div>
 		<ul>
 			<li>
-			{ apt.Name }
-			{ apt.Date.Format(time.RFC3339) }
+				{ apt.Name }
+				{ apt.Date.Format(time.RFC3339) }
 			</li>
 		</ul>
 	</div>

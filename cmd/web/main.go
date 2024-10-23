@@ -7,9 +7,9 @@ import (
 
 	"github.com/joho/godotenv"
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/maximekuhn/metego/calendar/sqlite"
-	"github.com/maximekuhn/metego/server"
-	openweatherapi "github.com/maximekuhn/metego/weather/open_weather_api"
+	"github.com/maximekuhn/metego/internal/calendar/sqlite"
+	"github.com/maximekuhn/metego/internal/server"
+	openweatherapi "github.com/maximekuhn/metego/internal/weather/open_weather_api"
 	"gopkg.in/yaml.v3"
 )
 

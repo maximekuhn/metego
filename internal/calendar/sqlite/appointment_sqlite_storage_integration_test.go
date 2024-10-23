@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/maximekuhn/metego/calendar"
+	"github.com/maximekuhn/metego/internal/calendar"
 )
 
 func TestSaveApt(t *testing.T) {

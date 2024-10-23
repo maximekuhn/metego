@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/maximekuhn/metego/weather"
+	"github.com/maximekuhn/metego/internal/weather"
 )
 
 // try to convert the icon string from open weather API to a custom type

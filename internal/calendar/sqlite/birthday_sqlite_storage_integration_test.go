@@ -11,7 +11,7 @@ import (
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/maximekuhn/metego/calendar"
+	"github.com/maximekuhn/metego/internal/calendar"
 )
 
 func TestSaveBd(t *testing.T) {

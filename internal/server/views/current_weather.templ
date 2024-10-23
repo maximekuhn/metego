@@ -1,7 +1,9 @@
 package views
 
-import "github.com/maximekuhn/metego/weather"
-import "fmt"
+import (
+	"fmt"
+	"github.com/maximekuhn/metego/internal/weather"
+)
 
 templ CurrentWeather(city string) {
 	// get current weather every 10 minutes

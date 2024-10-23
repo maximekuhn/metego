@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/maximekuhn/metego/server/views"
+	"github.com/maximekuhn/metego/internal/server/views"
 )
 
 // GET /?city=...

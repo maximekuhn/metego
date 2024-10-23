@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/maximekuhn/metego/calendar"
-	"github.com/maximekuhn/metego/server/views"
+	"github.com/maximekuhn/metego/internal/calendar"
+	"github.com/maximekuhn/metego/internal/server/views"
 )
 
 // GET /appointments

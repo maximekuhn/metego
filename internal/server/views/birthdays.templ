@@ -1,7 +1,9 @@
 package views
 
-import "github.com/maximekuhn/metego/calendar"
-import "fmt"
+import (
+	"fmt"
+	"github.com/maximekuhn/metego/internal/calendar"
+)
 
 templ Birthdays(bdays []*calendar.Birthday) {
 	<!DOCTYPE html>
@@ -27,8 +29,8 @@ templ BirthdayCard(bday *calendar.Birthday) {
 	<div>
 		<ul>
 			<li>
-			{ bday.Name }
-			{ fmt.Sprintf("%d", bday.Date.Day) } { bday.Date.Month.String() }
+				{ bday.Name }
+				{ fmt.Sprintf("%d", bday.Date.Day) } { bday.Date.Month.String() }
 			</li>
 		</ul>
 	</div>
