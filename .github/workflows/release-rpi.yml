@@ -43,6 +43,7 @@ jobs:
     name: Run checks
     needs: [extract_tag]
     uses: ./.github/workflows/ci.yml
+    secrets: inherit
 
   build_artifacts:
     name: Build and upload artifacts
