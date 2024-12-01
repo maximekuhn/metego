@@ -129,7 +129,7 @@ Tag the commit you want to create a release from.
 
 For example:
 ```shell
-git tag -a v.0.0.5.rc-1 -m "release candidate 1 for v0.0.4"
+git tag -a v.0.0.5.rc-1 -m "release candidate 1 for v0.0.5"
 git push --tags
 ```
 
