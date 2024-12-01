@@ -123,3 +123,14 @@ chromium --start http://localhost:9004/weather/<YOUR_CITY>
 ```
 
 // TODO: update docs
+
+## Create a release
+Tag the commit you want to create a release from.
+
+For example:
+```shell
+git tag -a v.0.0.5.rc-1 -m "release candidate 1 for v0.0.4"
+git push --tags
+```
+
+If the CI pass, a new release should be created and available [here](https://github.com/maximekuhn/metego/releases/latest).
