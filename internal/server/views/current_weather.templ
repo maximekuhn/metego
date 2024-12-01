@@ -3,6 +3,7 @@ package views
 import (
 	"fmt"
 	"github.com/maximekuhn/metego/internal/weather"
+	"log/slog"
 )
 
 templ CurrentWeather(city string) {
@@ -62,7 +63,26 @@ func imagePath(icon weather.CurrentWeatherIcon) string {
 		return "static/images/weather_icons/snow.png"
 	case weather.IconMist:
 		return "static/images/weather_icons/clouds.png"
+	case weather.IconNightClearSky:
+		return "static/images/weather_icons/clear_sky.png"
+	case weather.IconNightFewClouds:
+		return "static/images/weather_icons/few_clouds.png"
+	case weather.IconNightScatteredClouds:
+		return "static/images/weather_icons/few_clouds.png"
+	case weather.IconNightBrokenClouds:
+		return "static/images/weather_icons/clouds.png"
+	case weather.IconNightShowerRain:
+		return "static/images/weather_icons/rain.png"
+	case weather.IconNightRain:
+		return "static/images/weather_icons/rain.png"
+	case weather.IconNightThunderstorm:
+		return "static/images/weather_icons/thunderstorm.png"
+	case weather.IconNightSnow:
+		return "static/images/weather_icons/snow.png"
+	case weather.IconNightMist:
+		return "static/images/weather_icons/clouds.png"
 	}
+	slog.Warn("imagePath(): unknown icon")
 	return ""
 }
 
@@ -86,6 +106,25 @@ func imageAlt(icon weather.CurrentWeatherIcon) string {
 		return "neige"
 	case weather.IconMist:
 		return "brume"
+	case weather.IconNightClearSky:
+		return "ciel dégagé"
+	case weather.IconNightFewClouds:
+		return "quelques nuages"
+	case weather.IconNightScatteredClouds:
+		return "nuages dispersés"
+	case weather.IconNightBrokenClouds:
+		return "nuageux"
+	case weather.IconNightShowerRain:
+		return "averses pluvieuses"
+	case weather.IconNightRain:
+		return "pluie"
+	case weather.IconNightThunderstorm:
+		return "orage"
+	case weather.IconNightSnow:
+		return "neige"
+	case weather.IconNightMist:
+		return "brume"
 	}
+	slog.Warn("imageAlt(): unknown icon")
 	return "unknown icon"
 }

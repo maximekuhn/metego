@@ -3,7 +3,6 @@ package openweatherapi
 import (
 	"errors"
 	"fmt"
-	"strconv"
 
 	"github.com/maximekuhn/metego/internal/weather"
 )
@@ -17,32 +16,60 @@ func toWeatherIcon(icon string) (weather.CurrentWeatherIcon, error) {
 		return 0, errors.New("unknown icon type")
 	}
 
-	iconID, err := strconv.ParseInt(icon[:2], 10, 8)
-	if err != nil {
-		return 0, err
+	last := icon[2]
+	if last == 'd' {
+		return dayIcon(icon)
+	} else if last == 'n' {
+		return nightIcon(icon)
 	}
 
-	iconIDNumber := int8(iconID)
-	switch iconIDNumber {
-	case 1:
+	return weather.IconClearSky, fmt.Errorf("unknown icon: %s", icon)
+}
+
+func dayIcon(icon string) (weather.CurrentWeatherIcon, error) {
+	switch icon[:2] {
+	case "01":
 		return weather.IconClearSky, nil
-	case 2:
+	case "02":
 		return weather.IconFewClouds, nil
-	case 3:
+	case "03":
 		return weather.IconScatteredClouds, nil
-	case 4:
+	case "04":
 		return weather.IconBrokenClouds, nil
-	case 9:
+	case "09":
 		return weather.IconShowerRain, nil
-	case 10:
+	case "10":
 		return weather.IconRain, nil
-	case 11:
+	case "11":
 		return weather.IconThunderstorm, nil
-	case 13:
+	case "13":
 		return weather.IconSnow, nil
-	case 50:
+	case "50":
 		return weather.IconMist, nil
 	}
+	return weather.IconClearSky, fmt.Errorf("dayIcon(): unknown icon %s", icon)
+}
 
-	return 0, fmt.Errorf("unknown icon ID: %s", icon)
+func nightIcon(icon string) (weather.CurrentWeatherIcon, error) {
+	switch icon[:2] {
+	case "01":
+		return weather.IconNightClearSky, nil
+	case "02":
+		return weather.IconNightFewClouds, nil
+	case "03":
+		return weather.IconNightScatteredClouds, nil
+	case "04":
+		return weather.IconNightBrokenClouds, nil
+	case "09":
+		return weather.IconNightShowerRain, nil
+	case "10":
+		return weather.IconNightRain, nil
+	case "11":
+		return weather.IconNightThunderstorm, nil
+	case "13":
+		return weather.IconNightSnow, nil
+	case "50":
+		return weather.IconNightMist, nil
+	}
+	return weather.IconNightClearSky, fmt.Errorf("nightIcon(): unknown icon %s", icon)
 }

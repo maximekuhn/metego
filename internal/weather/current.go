@@ -1,19 +1,5 @@
 package weather
 
-type CurrentWeatherIcon int
-
-const (
-	IconClearSky CurrentWeatherIcon = iota
-	IconFewClouds
-	IconScatteredClouds
-	IconBrokenClouds
-	IconShowerRain
-	IconRain
-	IconThunderstorm
-	IconSnow
-	IconMist
-)
-
 type CurrentWeather struct {
 	Temp        float64
 	Pressure    float64
