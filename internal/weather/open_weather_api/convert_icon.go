@@ -11,7 +11,6 @@ import (
 //
 // if an error si returned ,the icon is not valid
 func toWeatherIcon(icon string) (weather.CurrentWeatherIcon, error) {
-	// remove 'd' or 'n' to only keep icon id's number
 	if len(icon) != 3 {
 		return 0, errors.New("unknown icon type")
 	}
