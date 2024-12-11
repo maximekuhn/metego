@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# TODO: check if the latest release is a new one to prevent un-needed update (same version)
+
 print_err_and_exit_1() {
     local errMsg="$1"
     if [ -z "$errMsg" ]; then
