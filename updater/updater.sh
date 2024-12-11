@@ -46,9 +46,9 @@ restart_service() {
     sudo systemctl restart metego
 }
 
-
 download_assets
 unzip_static_files
 arrange_static_files
+update_binary
 restart_service
 
