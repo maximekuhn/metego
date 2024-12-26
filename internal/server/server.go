@@ -48,6 +48,7 @@ func (s *Server) Start() error {
 	// appointments routes
 	http.HandleFunc("GET /appointments", s.appointmentsHandler)
 	http.HandleFunc("POST /api/appointments", s.handleCreateAppointment)
+	http.HandleFunc("DELETE /api/appointments/{appointmentID}", s.handleDeleteAppointment)
 
 	// cities route
 	http.HandleFunc("GET /city/next", s.changeCityHandler)
