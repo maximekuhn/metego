@@ -1,6 +1,7 @@
 package sqlite
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"time"
@@ -43,7 +44,7 @@ func (s *SQLiteAppointmentStorage) Save(a *calendar.Appointment) error {
 
 func (s *SQLiteAppointmentStorage) GetAllForDate(d uint8, m time.Month, y uint) ([]*calendar.Appointment, error) {
 	rows, err := s.db.Query(
-		"SELECT name, date FROM appointments WHERE date >= ?",
+		"SELECT id, name, date FROM appointments WHERE date >= ?",
 		fmt.Sprintf("%04d-%02d-%02d", y, m, d),
 	)
 	if err != nil {
@@ -79,7 +80,7 @@ func (s *SQLiteAppointmentStorage) GetAllForDate(d uint8, m time.Month, y uint) 
 
 func (s *SQLiteAppointmentStorage) GetAll(limit uint8, offset int) ([]*calendar.Appointment, error) {
 	rows, err := s.db.Query(
-		"SELECT name, date FROM appointments LIMIT ? OFFSET ?",
+		"SELECT id, name, date FROM appointments LIMIT ? OFFSET ?",
 		limit,
 		offset,
 	)
@@ -99,10 +100,15 @@ func (s *SQLiteAppointmentStorage) GetAll(limit uint8, offset int) ([]*calendar.
 func convertRowsApts(rows *sql.Rows) ([]*calendar.Appointment, error) {
 	apts := make([]*calendar.Appointment, 0)
 	for rows.Next() {
+		var id int
 		var name string
 		var dateStr string
-		if err := rows.Scan(&name, &dateStr); err != nil {
+		if err := rows.Scan(&id, &name, &dateStr); err != nil {
 			return nil, err
+		}
+
+		if id < 1 {
+			return nil, fmt.Errorf("expected ID > 1 but got %d", id)
 		}
 
 		// keep only date, ignore time
@@ -111,8 +117,21 @@ func convertRowsApts(rows *sql.Rows) ([]*calendar.Appointment, error) {
 			return nil, err
 		}
 
-		apt := calendar.NewAppointment(name, date)
+		apt := calendar.NewAppointment(id, name, date)
 		apts = append(apts, apt)
 	}
 	return apts, nil
+}
+
+func (s *SQLiteAppointmentStorage) Delete(ctx context.Context, id int) (bool, error) {
+	query := "DELETE FROM appointments WHERE id = ?"
+	res, err := s.db.ExecContext(ctx, query, id)
+	if err != nil {
+		return false, err
+	}
+	affectedCount, err := res.RowsAffected()
+	if err != nil {
+		return false, err
+	}
+	return affectedCount == 1, nil
 }

@@ -1,6 +1,7 @@
 package sqlite
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"strconv"
@@ -45,7 +46,7 @@ func (s *SQLiteBirthdayStorage) Save(b *calendar.Birthday) error {
 // get all birthdays given the current date
 func (s *SQLiteBirthdayStorage) GetAllForDate(month time.Month, day uint8) ([]*calendar.Birthday, error) {
 	rows, err := s.db.Query(
-		"SELECT name, date FROM birthdays WHERE date = ?",
+		"SELECT id, name, date FROM birthdays WHERE date = ?",
 		fmt.Sprintf("%d/%d", month, day),
 	)
 	if err != nil {
@@ -63,7 +64,7 @@ func (s *SQLiteBirthdayStorage) GetAllForDate(month time.Month, day uint8) ([]*c
 
 func (s *SQLiteBirthdayStorage) GetAll(limit uint, offset int) ([]*calendar.Birthday, error) {
 	rows, err := s.db.Query(
-		"SELECT name, date FROM birthdays LIMIT ? OFFSET ?",
+		"SELECT id, name, date FROM birthdays LIMIT ? OFFSET ?",
 		limit,
 		offset,
 	)
@@ -80,13 +81,31 @@ func (s *SQLiteBirthdayStorage) GetAll(limit uint, offset int) ([]*calendar.Birt
 	return bdays, nil
 }
 
+func (s *SQLiteBirthdayStorage) Delete(ctx context.Context, id int) (bool, error) {
+	query := "DELETE FROM birthdays WHERE id = ?"
+	res, err := s.db.ExecContext(ctx, query, id)
+	if err != nil {
+		return false, err
+	}
+	affectedCount, err := res.RowsAffected()
+	if err != nil {
+		return false, err
+	}
+	return affectedCount == 1, nil
+}
+
 func convertRowsBdays(rows *sql.Rows) ([]*calendar.Birthday, error) {
 	bdays := make([]*calendar.Birthday, 0)
 	for rows.Next() {
+		var id int
 		var name string
 		var date string
-		if err := rows.Scan(&name, &date); err != nil {
+		if err := rows.Scan(&id, &name, &date); err != nil {
 			return nil, err
+		}
+
+		if id < 1 {
+			return nil, fmt.Errorf("expected ID to be >=1 but got %d", id)
 		}
 
 		parts := strings.Split(date, "/")
@@ -107,7 +126,7 @@ func convertRowsBdays(rows *sql.Rows) ([]*calendar.Birthday, error) {
 			return nil, err
 		}
 
-		bday := calendar.NewBirthday(name, time.Month(m), uint8(d))
+		bday := calendar.NewBirthday(id, name, time.Month(m), uint8(d))
 		bdays = append(bdays, bday)
 	}
 	return bdays, nil

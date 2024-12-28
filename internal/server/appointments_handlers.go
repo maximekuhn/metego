@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -79,7 +80,7 @@ func (s *Server) handleCreateAppointment(w http.ResponseWriter, r *http.Request)
 	appointmentTime := time.Date(yearInt, time.Month(monthInt), dayInt, hourInt, minuteInt, 0, 0, time.UTC)
 
 	// TODO: validation
-	apt := calendar.NewAppointment(name, appointmentTime)
+	apt := calendar.NewAppointment(0, name, appointmentTime)
 
 	if err = s.state.aptsStorage.Save(apt); err != nil {
 		// TODO: check error type
@@ -90,4 +91,36 @@ func (s *Server) handleCreateAppointment(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
+	w.WriteHeader(http.StatusOK)
+}
+
+func (s *Server) handleDeleteAppointment(w http.ResponseWriter, r *http.Request) {
+	slog.Info(fmt.Sprintf("DELETE %s", r.URL))
+
+	aptIDStr := r.PathValue("appointmentID")
+	if aptIDStr == "" {
+		http.Error(w, "Missing appointmentID path parameter", http.StatusBadRequest)
+		return
+	}
+	aptID, err := strconv.Atoi(aptIDStr)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	found, err := s.state.aptsStorage.Delete(r.Context(), aptID)
+	if err != nil {
+		slog.Error(
+			"failed to delete appointment",
+			slog.String("err_msg", err.Error()),
+		)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	if !found {
+		http.Error(w, fmt.Sprintf("Appointment %d not found", aptID), http.StatusNotFound)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }

@@ -3,6 +3,7 @@
 package sqlite
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -38,7 +39,7 @@ func TestSaveBd(t *testing.T) {
 	}
 
 	// actual test
-	bd := calendar.NewBirthday("Toto", time.February, 1)
+	bd := calendar.NewBirthday(0, "Toto", time.February, 1)
 	if err = sut.Save(bd); err != nil {
 		t.Errorf("failed to save birthday: %s", err)
 		return
@@ -69,7 +70,7 @@ func TestSaveBdDuplicate(t *testing.T) {
 	}
 
 	// actual test
-	bd := calendar.NewBirthday("Toto", time.February, 1)
+	bd := calendar.NewBirthday(0, "Toto", time.February, 1)
 	if err = sut.Save(bd); err != nil {
 		t.Errorf("failed to save birthday: %s", err)
 		return
@@ -113,9 +114,9 @@ func TestGetAll(t *testing.T) {
 
 	// save some bd
 	birthdays := []*calendar.Birthday{
-		calendar.NewBirthday("Toto", time.April, 2),
-		calendar.NewBirthday("Tata", time.May, 2),
-		calendar.NewBirthday("Doggo", time.April, 2),
+		calendar.NewBirthday(0, "Toto", time.April, 2),
+		calendar.NewBirthday(0, "Tata", time.May, 2),
+		calendar.NewBirthday(0, "Doggo", time.April, 2),
 	}
 	for _, bd := range birthdays {
 		err = sut.Save(bd)
@@ -145,6 +146,71 @@ func TestGetAll(t *testing.T) {
 	if !contains("Doggo", allBds) {
 		t.Error("expected Doggo to be there")
 		return
+	}
+}
+
+func TestDeleteBday(t *testing.T) {
+	// setup
+	dbFileName := "test_db_save.sqlite3"
+	f, err := os.CreateTemp(".", dbFileName)
+	if err != nil {
+		t.Fatalf("failed to create tmp db file: %s", err)
+		return
+	}
+	defer os.Remove(f.Name())
+
+	db, err := setupTmpDB(f.Name())
+	if err != nil {
+		t.Errorf("failed to create db driver: %s", err)
+		return
+	}
+	defer db.Close()
+
+	sut, err := NewSQLiteBirthdayStorage(db)
+	if err != nil {
+		t.Errorf("failed to create sqlite birthday storage: %s", err)
+		return
+	}
+
+	// save some bd
+	birthdays := []*calendar.Birthday{
+		calendar.NewBirthday(0, "Toto", time.April, 2),
+		calendar.NewBirthday(0, "Tata", time.May, 2),
+		calendar.NewBirthday(0, "Doggo", time.April, 2),
+	}
+	for _, bd := range birthdays {
+		err = sut.Save(bd)
+		if err != nil {
+			t.Errorf("failed to save bday: %s", err)
+			return
+		}
+	}
+
+	// try to delete first birthday (id==1)
+	found, err := sut.Delete(context.TODO(), 1)
+	if err != nil {
+		t.Fatalf("Delete(): expected ok got err %v", err)
+	}
+	if !found {
+		t.Fatalf("Delete(): expected to find bday but not found")
+	}
+
+	// try to delete it again
+	found, err = sut.Delete(context.TODO(), 1)
+	if err != nil {
+		t.Fatalf("Delete() again: expected ok got err %v", err)
+	}
+	if found {
+		t.Fatalf("Delete() again: expected bday to have been deleted before but found it")
+	}
+
+	// try to delete a non-existing bday
+	found, err = sut.Delete(context.TODO(), 999)
+	if err != nil {
+		t.Fatalf("Delete() non-existing: expected ok got err %v", err)
+	}
+	if found {
+		t.Fatalf("Delete() non-existing: expected bday to not exist but found it")
 	}
 }
 

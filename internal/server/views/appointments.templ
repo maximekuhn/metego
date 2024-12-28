@@ -1,6 +1,7 @@
 package views
 
 import (
+	"fmt"
 	"github.com/maximekuhn/metego/internal/calendar"
 	"time"
 )
@@ -28,11 +29,20 @@ templ Appointments(apts []*calendar.Appointment) {
 templ AppointmentCard(apt *calendar.Appointment) {
 	<div>
 		<ul>
-			<li>
+			<li id={ fmt.Sprintf("apt-%d", apt.ID) }>
 				{ apt.Name }
 				{ apt.Date.Format(time.RFC3339) }
+				<form hx-delete={ fmt.Sprintf("/api/appointments/%d", apt.ID) } hx-swap="none" id={ fmt.Sprintf("form-delete-appointment-%d", apt.ID) }>
+					<button type="submit">Delete</button>
+				</form>
 			</li>
 		</ul>
+		<script>
+            var deleteForms = document.querySelectorAll("[id^=form-delete-appointment]")
+            for (deleteForm of deleteForms) {
+                deleteForm.addEventListener('htmx:afterRequest', function(event) { if (event.detail.successful) { location.reload(); } });
+            }
+        </script>
 	</div>
 }
 
