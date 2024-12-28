@@ -31,8 +31,17 @@ templ BirthdayCard(bday *calendar.Birthday) {
 			<li>
 				{ bday.Name }
 				{ fmt.Sprintf("%d", bday.Date.Day) } { bday.Date.Month.String() }
+				<form hx-delete={ fmt.Sprintf("/api/birthdays/%d", bday.ID) } hx-swap="none" id={ fmt.Sprintf("form-delete-birthday-%d", bday.ID) }>
+					<button type="submit">Delete</button>
+				</form>
 			</li>
 		</ul>
+		<script>
+            var deleteForms = document.querySelectorAll("[id^=form-delete-birthday]")
+            for (deleteForm of deleteForms) {
+                deleteForm.addEventListener('htmx:afterRequest', function(event) { if (event.detail.successful) { location.reload(); } });
+            }
+        </script>
 	</div>
 }
 

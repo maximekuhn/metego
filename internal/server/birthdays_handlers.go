@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"log/slog"
 	"net/http"
 	"strconv"
@@ -61,7 +62,7 @@ func (s *Server) handleCreateBirthday(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// TODO: validation
-	bday := calendar.NewBirthday(name, time.Month(m), uint8(d))
+	bday := calendar.NewBirthday(0, name, time.Month(m), uint8(d))
 
 	err = s.state.bdaysStorage.Save(bday)
 	if err != nil {
@@ -107,4 +108,35 @@ func (s *Server) handleGetTodayBirthdays(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
+}
+
+func (s *Server) handleDeleteBirthday(w http.ResponseWriter, r *http.Request) {
+	slog.Info(fmt.Sprintf("DELETE %s", r.URL))
+
+	bdayIDStr := r.PathValue("birthdayID")
+	if bdayIDStr == "" {
+		http.Error(w, "Missing birthdayID path parameter", http.StatusBadRequest)
+		return
+	}
+	bdayID, err := strconv.Atoi(bdayIDStr)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	found, err := s.state.bdaysStorage.Delete(r.Context(), bdayID)
+	if err != nil {
+		slog.Error(
+			"failed to delete birthday",
+			slog.String("err_msg", err.Error()),
+		)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	if !found {
+		http.Error(w, fmt.Sprintf("Birthday %d not found", bdayID), http.StatusNotFound)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }

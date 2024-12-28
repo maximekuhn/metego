@@ -44,6 +44,7 @@ func (s *Server) Start() error {
 	http.HandleFunc("GET /birthdays", s.birthdaysHandler)
 	http.HandleFunc("GET /api/birthdays", s.handleGetTodayBirthdays)
 	http.HandleFunc("POST /api/birthdays", s.handleCreateBirthday)
+	http.HandleFunc("DELETE /api/birthdays/{birthdayID}", s.handleDeleteBirthday)
 
 	// appointments routes
 	http.HandleFunc("GET /appointments", s.appointmentsHandler)
