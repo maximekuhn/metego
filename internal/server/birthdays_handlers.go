@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"sort"
 	"strconv"
 	"time"
 
@@ -15,7 +16,7 @@ import (
 func (s *Server) birthdaysHandler(w http.ResponseWriter, r *http.Request) {
 	slog.Info("GET /birthdays")
 
-	birhtdays, err := s.state.bdaysStorage.GetAll(1000, 0)
+	birthdays, err := s.state.bdaysStorage.GetAll(1000, 0)
 	if err != nil {
 		slog.Error(
 			"failed to get birthdays from db",
@@ -25,7 +26,11 @@ func (s *Server) birthdaysHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	birthdaysPage := views.Birthdays(birhtdays)
+	sort.Slice(birthdays, func(i, j int) bool {
+		return birthdays[i].Date.Before(birthdays[j].Date)
+	})
+
+	birthdaysPage := views.Birthdays(birthdays)
 
 	w.Header().Add("Content-Type", "text/html")
 
