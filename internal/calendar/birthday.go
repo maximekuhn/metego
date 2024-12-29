@@ -17,6 +17,19 @@ type BirthdayDate struct {
 	Day   uint8
 }
 
+// Before returns true if the receiver (b) is before the input parameter (other).
+//
+// It returns false if the date is the same.
+func (b BirthdayDate) Before(other BirthdayDate) bool {
+	if b.Month < other.Month {
+		return true
+	}
+	if b.Month > other.Month {
+		return false
+	}
+	return b.Day < other.Day
+}
+
 func NewBirthday(id int, name string, m time.Month, d uint8) *Birthday {
 	return &Birthday{
 		ID:   id,
