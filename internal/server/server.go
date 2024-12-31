@@ -57,6 +57,9 @@ func (s *Server) Start() error {
 	// static files
 	http.Handle("GET /static/", http.StripPrefix("/static", http.FileServer(http.Dir("./static"))))
 
+	// background jobs
+	go s.cleanupOldAppointments()
+
 	// TODO: get this from conf
 	err := http.ListenAndServe(":9004", nil)
 	return err

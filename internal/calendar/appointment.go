@@ -42,4 +42,9 @@ type AppointmentStorage interface {
 	// A non-nil error indiciates something went really wrong and the result
 	// might not be relevant.
 	Delete(ctx context.Context, id int) (bool, error)
+
+	// DeleteAllBefore deletes all appointments before the provided date (time is ignored).
+	// It returns the number of appointments deleted. If a non-nil error is returned,
+	// the result must not be used.
+	DeleteAllBefore(ctx context.Context, date time.Time) (int, error)
 }

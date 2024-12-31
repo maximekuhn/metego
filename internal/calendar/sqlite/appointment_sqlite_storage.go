@@ -135,3 +135,16 @@ func (s *SQLiteAppointmentStorage) Delete(ctx context.Context, id int) (bool, er
 	}
 	return affectedCount == 1, nil
 }
+
+func (s *SQLiteAppointmentStorage) DeleteAllBefore(ctx context.Context, date time.Time) (int, error) {
+	query := "DELETE FROM appointments WHERE date < ?"
+	res, err := s.db.ExecContext(ctx, query, fmt.Sprintf("%04d-%02d-%02d", date.Year(), date.Month(), date.Day()))
+	if err != nil {
+		return 0, err
+	}
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+	return int(rowsAffected), nil
+}
