@@ -222,7 +222,7 @@ func TestDeleteApt(t *testing.T) {
 
 func TestDeleteAllAptsBefore(t *testing.T) {
 	// setup
-	dbFileName := "test_db_save_apt.sqlite3"
+	dbFileName := "test_db_delete_apts_before_date.sqlite3"
 	f, err := os.CreateTemp(".", dbFileName)
 	if err != nil {
 		t.Fatalf("failed to create tmp db file: %s", err)
