@@ -16,7 +16,7 @@ import (
 func (s *Server) birthdaysHandler(w http.ResponseWriter, r *http.Request) {
 	slog.Info("GET /birthdays")
 
-	birthdays, err := s.state.bdaysStorage.GetAll(1000, 0)
+	birthdays, err := s.state.bdaysStorage.GetAll(r.Context(), 1000, 0)
 	if err != nil {
 		slog.Error(
 			"failed to get birthdays from db",
@@ -69,7 +69,7 @@ func (s *Server) handleCreateBirthday(w http.ResponseWriter, r *http.Request) {
 	// TODO: validation
 	bday := calendar.NewBirthday(0, name, time.Month(m), uint8(d))
 
-	err = s.state.bdaysStorage.Save(bday)
+	err = s.state.bdaysStorage.Save(r.Context(), bday)
 	if err != nil {
 		// TODO: check error type
 		slog.Error("failed to save bday", slog.String("err_msg", err.Error()))
@@ -87,7 +87,7 @@ func (s *Server) handleGetTodayBirthdays(w http.ResponseWriter, r *http.Request)
 	month := now.Month()
 	year := now.Year()
 
-	birhtdays, err := s.state.bdaysStorage.GetAllForDate(month, uint8(day))
+	birhtdays, err := s.state.bdaysStorage.GetAllForDate(r.Context(), month, uint8(day))
 	if err != nil {
 		slog.Error("failed to get today birthdays", slog.String("err_msg", err.Error()))
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
