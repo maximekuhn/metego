@@ -96,7 +96,7 @@ func (s *Server) handleGetTodayBirthdays(w http.ResponseWriter, r *http.Request)
 	slog.Info("birthdays", slog.Int("count", len(birhtdays)))
 
 	// TODO: move this somewhere else
-	apts, err := s.state.aptsStorage.GetAllForDate(uint8(day), month, uint(year))
+	apts, err := s.state.aptsStorage.GetAllForDate(r.Context(), uint8(day), month, uint(year))
 	if err != nil {
 		slog.Error("failed to get today appointments", slog.String("err_msg", err.Error()))
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

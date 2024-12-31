@@ -31,11 +31,11 @@ type AppointmentStorage interface {
 	//
 	// If the same appointment already exists, an error of type
 	// dupicate is returned
-	Save(a *Appointment) error
+	Save(ctx context.Context, a *Appointment) error
 
-	GetAllForDate(d uint8, m time.Month, y uint) ([]*Appointment, error)
+	GetAllForDate(ctx context.Context, d uint8, m time.Month, y uint) ([]*Appointment, error)
 
-	GetAll(limit uint8, offset int) ([]*Appointment, error)
+	GetAll(ctx context.Context, limit uint8, offset int) ([]*Appointment, error)
 
 	// Delete an appointment given its ID and returns true if the appointment
 	// existed, false otherwise.

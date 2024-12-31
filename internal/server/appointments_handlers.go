@@ -15,7 +15,7 @@ import (
 func (s *Server) appointmentsHandler(w http.ResponseWriter, r *http.Request) {
 	slog.Info("GET /appointments")
 
-	apts, err := s.state.aptsStorage.GetAll(255, 0)
+	apts, err := s.state.aptsStorage.GetAll(r.Context(), 255, 0)
 	if err != nil {
 		slog.Error(
 			"failed to get appointments from db",
@@ -82,7 +82,7 @@ func (s *Server) handleCreateAppointment(w http.ResponseWriter, r *http.Request)
 	// TODO: validation
 	apt := calendar.NewAppointment(0, name, appointmentTime)
 
-	if err = s.state.aptsStorage.Save(apt); err != nil {
+	if err = s.state.aptsStorage.Save(r.Context(), apt); err != nil {
 		// TODO: check error type
 		slog.Error(
 			"failed to save appointment",

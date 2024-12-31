@@ -23,7 +23,7 @@ func NewSQLiteAppointmentStorage(db *sql.DB) *SQLiteAppointmentStorage {
 // Save an appointment
 // If the same appointment already exists, an error of type
 // dupicate is returned
-func (s *SQLiteAppointmentStorage) Save(a *calendar.Appointment) error {
+func (s *SQLiteAppointmentStorage) Save(ctx context.Context, a *calendar.Appointment) error {
 	_, err := s.db.Exec(
 		"INSERT INTO appointments (name, date) VALUES (?,?)",
 		a.Name,
@@ -42,7 +42,7 @@ func (s *SQLiteAppointmentStorage) Save(a *calendar.Appointment) error {
 	return nil
 }
 
-func (s *SQLiteAppointmentStorage) GetAllForDate(d uint8, m time.Month, y uint) ([]*calendar.Appointment, error) {
+func (s *SQLiteAppointmentStorage) GetAllForDate(ctx context.Context, d uint8, m time.Month, y uint) ([]*calendar.Appointment, error) {
 	rows, err := s.db.Query(
 		"SELECT id, name, date FROM appointments WHERE date >= ?",
 		fmt.Sprintf("%04d-%02d-%02d", y, m, d),
@@ -78,7 +78,7 @@ func (s *SQLiteAppointmentStorage) GetAllForDate(d uint8, m time.Month, y uint) 
 	return appointments, nil
 }
 
-func (s *SQLiteAppointmentStorage) GetAll(limit uint8, offset int) ([]*calendar.Appointment, error) {
+func (s *SQLiteAppointmentStorage) GetAll(ctx context.Context, limit uint8, offset int) ([]*calendar.Appointment, error) {
 	rows, err := s.db.Query(
 		"SELECT id, name, date FROM appointments LIMIT ? OFFSET ?",
 		limit,
