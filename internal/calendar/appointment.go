@@ -46,5 +46,5 @@ type AppointmentStorage interface {
 	// DeleteAllBefore deletes all appointments before the provided date (time is ignored).
 	// It returns the number of appointments deleted. If a non-nil error is returned,
 	// the result must not be used.
-	DeleteAllBefore(ctx context.Context, datetime time.Time) (int, error)
+	DeleteAllBefore(ctx context.Context, date time.Time) (int, error)
 }
