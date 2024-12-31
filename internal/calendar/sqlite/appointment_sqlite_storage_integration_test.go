@@ -220,6 +220,50 @@ func TestDeleteApt(t *testing.T) {
 	}
 }
 
+func TestDeleteAllAptsBefore(t *testing.T) {
+	// setup
+	dbFileName := "test_db_save_apt.sqlite3"
+	f, err := os.CreateTemp(".", dbFileName)
+	if err != nil {
+		t.Fatalf("failed to create tmp db file: %s", err)
+		return
+	}
+	defer os.Remove(f.Name())
+
+	db, err := setupTmpDB(f.Name())
+	if err != nil {
+		t.Errorf("failed to create db driver: %s", err)
+		return
+	}
+	defer db.Close()
+
+	sut := NewSQLiteAppointmentStorage(db)
+
+	// add 2 apts
+	date, err := time.Parse("2006-01-02", "2023-07-14")
+	if err != nil {
+		t.Fatalf("Failed to parse date: %v", err)
+	}
+	if err := sut.Save(calendar.NewAppointment(0, "Football match", date)); err != nil {
+		t.Fatalf("Failed to save apt: %v", err)
+	}
+	if err := sut.Save(calendar.NewAppointment(0, "MOTOGP race", date)); err != nil {
+		t.Fatalf("Failed to save apt: %v", err)
+	}
+	if err := sut.Save(calendar.NewAppointment(0, "Job interview", date.Add(2*24*time.Hour))); err != nil {
+		t.Fatalf("Failed to save apt: %v", err)
+	}
+
+	limitDate := date.Add(24 * time.Hour)
+	deleted, err := sut.DeleteAllBefore(context.TODO(), limitDate)
+	if err != nil {
+		t.Fatalf("DeleteAllBefore(): expected ok got err %v", err)
+	}
+	if deleted != 2 {
+		t.Fatalf("DeleteAllBefore(): expected to delete 2 apts but deleted %d", deleted)
+	}
+}
+
 func fixturesAppoitments(sut *SQLiteAppointmentStorage) error {
 	for i := 1; i <= 10; i++ {
 		name := fmt.Sprintf("Appointment %d", i)
