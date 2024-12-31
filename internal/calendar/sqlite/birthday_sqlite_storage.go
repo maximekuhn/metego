@@ -24,7 +24,7 @@ func NewSQLiteBirthdayStorage(db *sql.DB) (*SQLiteBirthdayStorage, error) {
 
 // save the birthday
 // if the same birthday already exists, an error is returned
-func (s *SQLiteBirthdayStorage) Save(b *calendar.Birthday) error {
+func (s *SQLiteBirthdayStorage) Save(ctx context.Context, b *calendar.Birthday) error {
 	_, err := s.db.Exec(
 		"INSERT INTO birthdays (name, date) VALUES (?, ?)",
 		b.Name,
@@ -44,7 +44,7 @@ func (s *SQLiteBirthdayStorage) Save(b *calendar.Birthday) error {
 }
 
 // get all birthdays given the current date
-func (s *SQLiteBirthdayStorage) GetAllForDate(month time.Month, day uint8) ([]*calendar.Birthday, error) {
+func (s *SQLiteBirthdayStorage) GetAllForDate(ctx context.Context, month time.Month, day uint8) ([]*calendar.Birthday, error) {
 	rows, err := s.db.Query(
 		"SELECT id, name, date FROM birthdays WHERE date = ?",
 		fmt.Sprintf("%d/%d", month, day),
@@ -62,7 +62,7 @@ func (s *SQLiteBirthdayStorage) GetAllForDate(month time.Month, day uint8) ([]*c
 	return bdays, nil
 }
 
-func (s *SQLiteBirthdayStorage) GetAll(limit uint, offset int) ([]*calendar.Birthday, error) {
+func (s *SQLiteBirthdayStorage) GetAll(ctx context.Context, limit uint, offset int) ([]*calendar.Birthday, error) {
 	rows, err := s.db.Query(
 		"SELECT id, name, date FROM birthdays LIMIT ? OFFSET ?",
 		limit,

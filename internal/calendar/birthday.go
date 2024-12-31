@@ -49,13 +49,13 @@ type BirhtdayStorage interface {
 	// Save a birthday
 	//
 	// Return an error of type duplicate if the same birthday already exists
-	Save(b *Birthday) error
+	Save(ctx context.Context, b *Birthday) error
 
 	// GetAllForDate returns all the birthdays for the given date
-	GetAllForDate(m time.Month, day uint8) ([]*Birthday, error)
+	GetAllForDate(ctx context.Context, m time.Month, day uint8) ([]*Birthday, error)
 
 	// GetAll returns all the birthdays
-	GetAll(limit uint, offset int) ([]*Birthday, error)
+	GetAll(ctx context.Context, limit uint, offset int) ([]*Birthday, error)
 
 	// Delete a birthday given its ID and returns true if the target existed, false otherwise.
 	// A non-nil error indiciates something went really wrong and the result might not be relevant.

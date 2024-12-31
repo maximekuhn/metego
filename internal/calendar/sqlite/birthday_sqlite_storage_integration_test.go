@@ -40,7 +40,7 @@ func TestSaveBd(t *testing.T) {
 
 	// actual test
 	bd := calendar.NewBirthday(0, "Toto", time.February, 1)
-	if err = sut.Save(bd); err != nil {
+	if err = sut.Save(context.TODO(), bd); err != nil {
 		t.Errorf("failed to save birthday: %s", err)
 		return
 	}
@@ -71,11 +71,11 @@ func TestSaveBdDuplicate(t *testing.T) {
 
 	// actual test
 	bd := calendar.NewBirthday(0, "Toto", time.February, 1)
-	if err = sut.Save(bd); err != nil {
+	if err = sut.Save(context.TODO(), bd); err != nil {
 		t.Errorf("failed to save birthday: %s", err)
 		return
 	}
-	err = sut.Save(bd)
+	err = sut.Save(context.TODO(), bd)
 	if err == nil {
 		t.Error("expected an error")
 		return
@@ -119,7 +119,7 @@ func TestGetAll(t *testing.T) {
 		calendar.NewBirthday(0, "Doggo", time.April, 2),
 	}
 	for _, bd := range birthdays {
-		err = sut.Save(bd)
+		err = sut.Save(context.TODO(), bd)
 		if err != nil {
 			t.Errorf("failed to save bday: %s", err)
 			return
@@ -128,7 +128,7 @@ func TestGetAll(t *testing.T) {
 
 	m := time.April
 	d := 2
-	allBds, err := sut.GetAllForDate(m, uint8(d))
+	allBds, err := sut.GetAllForDate(context.TODO(), m, uint8(d))
 	if err != nil {
 		t.Errorf("failed to get all birthdays: %s", err)
 		return
@@ -179,7 +179,7 @@ func TestDeleteBday(t *testing.T) {
 		calendar.NewBirthday(0, "Doggo", time.April, 2),
 	}
 	for _, bd := range birthdays {
-		err = sut.Save(bd)
+		err = sut.Save(context.TODO(), bd)
 		if err != nil {
 			t.Errorf("failed to save bday: %s", err)
 			return

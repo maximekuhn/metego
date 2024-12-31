@@ -34,7 +34,7 @@ func TestSaveApt(t *testing.T) {
 
 	// actual test
 	apt := calendar.NewAppointment(0, "car", time.Now())
-	if err = sut.Save(apt); err != nil {
+	if err = sut.Save(context.TODO(), apt); err != nil {
 		t.Errorf("failed to save appointment: %s", err)
 		return
 	}
@@ -62,8 +62,8 @@ func TestSaveAptDuplicate(t *testing.T) {
 
 	// actual test
 	apt := calendar.NewAppointment(0, "car", time.Now())
-	_ = sut.Save(apt)
-	err = sut.Save(apt)
+	_ = sut.Save(context.TODO(), apt)
+	err = sut.Save(context.TODO(), apt)
 	if err == nil {
 		t.Error("should have gotten an error")
 	}
@@ -99,7 +99,7 @@ func TestGetAllFor(t *testing.T) {
 
 	// try to fetch
 	date, _ := time.Parse("2006-01-02", "2023-07-04")
-	apts, err := sut.GetAllForDate(uint8(date.Day()), date.Month(), uint(date.Year()))
+	apts, err := sut.GetAllForDate(context.TODO(), uint8(date.Day()), date.Month(), uint(date.Year()))
 	if err != nil {
 		t.Fatalf("failed to get appointments: %s", err)
 	}
@@ -137,7 +137,7 @@ func TestGetAllApts(t *testing.T) {
 	}
 
 	// try to fetch
-	apts, err := sut.GetAll(10, 0)
+	apts, err := sut.GetAll(context.TODO(), 10, 0)
 	if err != nil {
 		t.Fatalf("GetAll(): expected ok got %v", err)
 	}
@@ -210,7 +210,7 @@ func TestDeleteApt(t *testing.T) {
 				t.Fatalf("Delete(%d): expected no appointment to exist with this ID", test.aptID)
 			}
 
-			apts, err := sut.GetAll(10, 0)
+			apts, err := sut.GetAll(context.TODO(), 10, 0)
 			for _, apt := range apts {
 				if apt.ID == test.aptID {
 					t.Fatalf("Delete(%d): expected apt to be deleted but it's still here", test.aptID)
@@ -244,13 +244,13 @@ func TestDeleteAllAptsBefore(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to parse date: %v", err)
 	}
-	if err := sut.Save(calendar.NewAppointment(0, "Football match", date)); err != nil {
+	if err := sut.Save(context.TODO(), calendar.NewAppointment(0, "Football match", date)); err != nil {
 		t.Fatalf("Failed to save apt: %v", err)
 	}
-	if err := sut.Save(calendar.NewAppointment(0, "MOTOGP race", date)); err != nil {
+	if err := sut.Save(context.TODO(), calendar.NewAppointment(0, "MOTOGP race", date)); err != nil {
 		t.Fatalf("Failed to save apt: %v", err)
 	}
-	if err := sut.Save(calendar.NewAppointment(0, "Job interview", date.Add(2*24*time.Hour))); err != nil {
+	if err := sut.Save(context.TODO(), calendar.NewAppointment(0, "Job interview", date.Add(2*24*time.Hour))); err != nil {
 		t.Fatalf("Failed to save apt: %v", err)
 	}
 
@@ -268,7 +268,7 @@ func fixturesAppoitments(sut *SQLiteAppointmentStorage) error {
 	for i := 1; i <= 10; i++ {
 		name := fmt.Sprintf("Appointment %d", i)
 		date, _ := time.Parse("2006-01-02", fmt.Sprintf("2023-07-%02d", i))
-		err := sut.Save(calendar.NewAppointment(0, name, date))
+		err := sut.Save(context.TODO(), calendar.NewAppointment(0, name, date))
 		if err != nil {
 			return err
 		}
