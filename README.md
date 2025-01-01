@@ -134,3 +134,27 @@ git push --tags
 ```
 
 If the CI pass, a new release should be created and available [here](https://github.com/maximekuhn/metego/releases/latest).
+
+## Auto updates
+To enable automatic updates for metego, a cron job must be created.
+
+First, download the script and place it in metego's working directory, for example `/home/pi/Documents/metego`:
+```shell
+cd /home/pi/Documents/metego
+curl https://raw.githubusercontent.com/maximekuhn/metego/refs/heads/4-create-deploy-and-update-scriptsmechanisms/updater/updater.sh > updater.sh
+chmod +x updater.sh
+```
+
+Then, open cron jobs configuration for the current user:
+```shell
+crontab -e
+```
+
+Add the cron job:
+```text
+0 0 * * * cd /home/pi/Documents/metego && ./updater.sh
+```
+> This will run the update script every day at midnight.
+
+Thats it! :)
+
