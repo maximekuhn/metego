@@ -9,6 +9,9 @@ set -euxo pipefail
 # Where to log (relative)
 LOG_FILE="metego_update_logs.log"
 
+# Current version
+CURR_VERSION="curr_metego_version"
+
 # log_err_and_exit_1 accepts an error message as first argument.
 # It will be logged to the specified $LOG_FILE and the script execution
 # will end with an exit code 1.
@@ -42,9 +45,34 @@ get_latest_release_tag() {
     echo "$latest_tag"
 }
 
+# check_if_update_is_needed true" if provided release tag ($1) is
+# newer than the current running one.
+check_if_update_is_needed() {
+    log_msg "checking if update is needed..."
+
+    local latestReleaseTag="$1"
+    local currVersion=$(echo $CURR_VERSION)
+    log_msg "latest release tag: $latestReleaseTag, current version $currVersion"
+
+    # We assume nobody is deleting any release from the Github repository.
+    # We can simpy check if latestReleaseTag is the same as the one stored
+    # in the CURR_VERSION file. If it's not the same, then we need to update,
+    # otherwise the software is already up to date.
+    if [ "$latestReleaseTag" = "$currVersion" ]; then
+        echo "false"
+        return
+    fi
+    echo "true"
+}
+
+# download_assets accepts the release tag as its first argument
+# and download the associated assets.
 download_assets() {
     log_msg "downloading assets..."
-    release_tag=$(get_latest_release_tag)
+    local release_tag="$1"
+    if [ -z "$release_tag" ]; then
+        log_err_and_exit_1 "missing release tag(or empty)"
+    fi
     bin_download_url="https://github.com/maximekuhn/metego/releases/download/$release_tag/web"
     static_download_url="https://github.com/maximekuhn/metego/releases/download/$release_tag/static.zip"
     wget "$bin_download_url" -O web.new
@@ -84,17 +112,42 @@ restart_service() {
 # repository's main branch and replace this one with it.
 update_update_script() {
     log_msg "updating update script"
-    # TODO
+    wget https://github.com/maximekuhn/metego/tree/main/updater -O latest_update_script.sh
+    chmod +x latest_update_script.sh
+    mv latest_update_script.sh updater.sh
     log_msg "update script updated!"
+}
+
+# store_new_version writes the new version to the $CURR_VERSION file.
+# It accepts the release tag as the first argument.
+store_new_version() {
+    log_msg "storing new version..."
+    local newVersion="$1"
+    if [ -z "$newVersion" ]; then
+        log_err_and_exit_1 "missing new version (or empty)"
+    fi
+    echo "$newVersion" > $CURR_VERSION
+    log_msg "new version stored!"
 }
 
 ## MAIN ##
 log_msg "UPDATE SCRIPT START"
-download_assets
+latest_release_tag=$(get_latest_release_tag)
+
+update_needed=$(check_if_update_is_needed)
+if [ "$update_needed" != "true" ]; then
+    log_msg "metego is already up to date"
+    log_msg "UPDATE SCRIPT END"
+    exit 0
+fi
+log_msg "a new version has been found, metego needs to be updated with $latest_release_tag"
+
+download_assets "$latest_release_tag"
 unzip_static_files
 arrange_static_files
 update_binary
 restart_service
 update_update_script
+store_new_version "$latest_release_tag"
 log_msg "UPDATE SCRIPT END"
 
