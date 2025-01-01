@@ -119,7 +119,7 @@ restart_service() {
 # repository's main branch and replace this one with it.
 update_update_script() {
     log_msg "updating update script"
-    wget https://github.com/maximekuhn/metego/tree/main/updater -O latest_update_script.sh
+    wget https://github.com/maximekuhn/metego/tree/main/updater/updater.sh -O latest_update_script.sh
     chmod +x latest_update_script.sh
     mv latest_update_script.sh updater.sh
     log_msg "update script updated!"
