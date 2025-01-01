@@ -141,7 +141,7 @@ To enable automatic updates for metego, a cron job must be created.
 First, download the script and place it in metego's working directory, for example `/home/pi/Documents/metego`:
 ```shell
 cd /home/pi/Documents/metego
-curl https://raw.githubusercontent.com/maximekuhn/metego/refs/heads/4-create-deploy-and-update-scriptsmechanisms/updater/updater.sh > updater.sh
+curl https://raw.githubusercontent.com/maximekuhn/metego/refs/heads/main/updater/updater.sh > updater.sh
 chmod +x updater.sh
 ```
 
