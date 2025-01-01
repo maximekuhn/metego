@@ -52,7 +52,14 @@ check_if_update_is_needed() {
 
     local latestReleaseTag="$1"
     local currVersion=$(echo $CURR_VERSION)
-    log_msg "latest release tag: $latestReleaseTag, current version $currVersion"
+
+    if [ -z "$currVersion" ]; then
+        log_msg "latest release tag: $latest_release_tag, current version: no current version found"
+        echo "true"
+        return
+    fi
+
+    log_msg "latest release tag: $latestReleaseTag, current version: $currVersion"
 
     # We assume nobody is deleting any release from the Github repository.
     # We can simpy check if latestReleaseTag is the same as the one stored
@@ -149,5 +156,6 @@ update_binary
 restart_service
 update_update_script
 store_new_version "$latest_release_tag"
+
 log_msg "UPDATE SCRIPT END"
 
