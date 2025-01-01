@@ -119,6 +119,7 @@ restart_service() {
 # repository's main branch and replace this one with it.
 update_update_script() {
     log_msg "updating update script"
+    curl https://raw.githubusercontent.com/maximekuhn/metego/refs/heads/main/updater/updater.sh > latest_update_script.sh
     wget https://github.com/maximekuhn/metego/tree/main/updater/updater.sh -O latest_update_script.sh
     chmod +x latest_update_script.sh
     mv latest_update_script.sh updater.sh
@@ -141,7 +142,7 @@ store_new_version() {
 log_msg "UPDATE SCRIPT START"
 latest_release_tag=$(get_latest_release_tag)
 
-update_needed=$(check_if_update_is_needed)
+update_needed=$(check_if_update_is_needed "$latest_release_tag")
 if [ "$update_needed" != "true" ]; then
     log_msg "metego is already up to date"
     log_msg "UPDATE SCRIPT END"
