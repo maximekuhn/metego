@@ -51,7 +51,7 @@ check_if_update_is_needed() {
     log_msg "checking if update is needed..."
 
     local latestReleaseTag="$1"
-    local currVersion=$(echo $CURR_VERSION)
+    local currVersion=$(cat $CURR_VERSION)
 
     if [ -z "$currVersion" ]; then
         log_msg "latest release tag: $latest_release_tag, current version: no current version found"
@@ -120,7 +120,6 @@ restart_service() {
 update_update_script() {
     log_msg "updating update script"
     curl https://raw.githubusercontent.com/maximekuhn/metego/refs/heads/main/updater/updater.sh > latest_update_script.sh
-    wget https://github.com/maximekuhn/metego/tree/main/updater/updater.sh -O latest_update_script.sh
     chmod +x latest_update_script.sh
     mv latest_update_script.sh updater.sh
     log_msg "update script updated!"
