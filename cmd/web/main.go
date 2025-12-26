@@ -10,7 +10,7 @@ import (
 	"github.com/maximekuhn/metego/internal/calendar/sqlite"
 	"github.com/maximekuhn/metego/internal/server"
 	openweatherapi "github.com/maximekuhn/metego/internal/weather/open_weather_api"
-	"gopkg.in/yaml.v3"
+	yaml "gopkg.in/yaml.v3"
 )
 
 // TODO:

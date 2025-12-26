@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mattn/go-sqlite3"
+	sqlite3 "github.com/mattn/go-sqlite3"
 	"github.com/maximekuhn/metego/internal/calendar"
 )
 
