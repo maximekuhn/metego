@@ -16,10 +16,10 @@ permissions:
   contents: write
 
 env:
-  GO_VERSION: "1.23"
+  GO_VERSION: "1.25"
   GO_TASK_VERSION: "v3.39.2"
   GO_TEMPL_VERSION: "v0.2.778"
-  GO_CI_LINT_VERSION: "v1.61"
+  GO_CI_LINT_VERSION: "v2.7.2"
   STATIC_ARTIFACT_NAME: "metego-static"
   BINARY_ARTIFACT_NAME: "metego-binary"
 

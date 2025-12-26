@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mattn/go-sqlite3"
+	sqlite3 "github.com/mattn/go-sqlite3"
 	"github.com/maximekuhn/metego/internal/calendar"
 )
 
@@ -52,7 +52,7 @@ func (s *SQLiteBirthdayStorage) GetAllForDate(ctx context.Context, month time.Mo
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 
 	bdays, err := convertRowsBdays(rows)
 	if err != nil {
@@ -71,7 +71,7 @@ func (s *SQLiteBirthdayStorage) GetAll(ctx context.Context, limit uint, offset i
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 
 	bdays, err := convertRowsBdays(rows)
 	if err != nil {

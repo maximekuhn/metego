@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mattn/go-sqlite3"
+	sqlite3 "github.com/mattn/go-sqlite3"
 	"github.com/maximekuhn/metego/internal/calendar"
 )
 
@@ -87,7 +87,7 @@ func (s *SQLiteAppointmentStorage) GetAll(ctx context.Context, limit uint8, offs
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 
 	apts, err := convertRowsApts(rows)
 	if err != nil {

@@ -10,7 +10,7 @@ import (
 	"github.com/maximekuhn/metego/internal/calendar/sqlite"
 	"github.com/maximekuhn/metego/internal/server"
 	openweatherapi "github.com/maximekuhn/metego/internal/weather/open_weather_api"
-	"gopkg.in/yaml.v3"
+	yaml "gopkg.in/yaml.v3"
 )
 
 // TODO:
@@ -70,7 +70,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer db.Close()
+	defer func() { _ = db.Close() }()
 
 	err = sqlite.ApplyMigrations(db)
 	if err != nil {
@@ -85,8 +85,9 @@ func main() {
 	}
 
 	aptsStorage := sqlite.NewSQLiteAppointmentStorage(db)
+	namedaysStorage := sqlite.NewSQLiteNamedayStorage(db)
 
-	server := server.NewServer(fetcher, bdaysStorage, aptsStorage, cities)
+	server := server.NewServer(fetcher, bdaysStorage, aptsStorage, namedaysStorage, cities)
 	if err := server.Start(); err != nil {
 		fmt.Println(err)
 	}

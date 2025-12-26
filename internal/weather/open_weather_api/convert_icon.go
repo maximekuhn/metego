@@ -16,9 +16,10 @@ func toWeatherIcon(icon string) (weather.CurrentWeatherIcon, error) {
 	}
 
 	last := icon[2]
-	if last == 'd' {
+	switch last {
+	case 'd':
 		return dayIcon(icon)
-	} else if last == 'n' {
+	case 'n':
 		return nightIcon(icon)
 	}
 
