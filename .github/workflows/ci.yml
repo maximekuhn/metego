@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  GO_VERSION: "1.23"
+  GO_VERSION: "1.25"
   GO_TASK_VERSION: "v3.39.2"
   GO_TEMPL_VERSION: "v0.2.778"
   GO_CI_LINT_VERSION: "v2.7.2"
