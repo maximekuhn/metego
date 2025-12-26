@@ -15,7 +15,7 @@ env:
   GO_VERSION: "1.23"
   GO_TASK_VERSION: "v3.39.2"
   GO_TEMPL_VERSION: "v0.2.778"
-  GO_CI_LINT_VERSION: "v1.61"
+  GO_CI_LINT_VERSION: "v2.7.2"
 
 jobs:
   fmtcheck:
@@ -47,7 +47,7 @@ jobs:
       - run: task build
       # not sure why, but it requires to do this before running the linter
       - run: go mod tidy && go mod vendor
-      - uses: golangci/golangci-lint-action@v6
+      - uses: golangci/golangci-lint-action@v9
         with:
           version: ${{ env.GO_CI_LINT_VERSION }}
 
