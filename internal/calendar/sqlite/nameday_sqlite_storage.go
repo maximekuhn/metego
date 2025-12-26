@@ -72,7 +72,7 @@ func (s *SQLiteNamedayStorage) GetAll(ctx context.Context, limit uint, offset in
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 
 	namedays := make([]*calendar.Nameday, 0)
 	for rows.Next() {
