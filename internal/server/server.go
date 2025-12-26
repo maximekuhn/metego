@@ -22,10 +22,11 @@ func NewServer(
 	fetcher weather.Fetcher,
 	bdaysStorage calendar.BirhtdayStorage,
 	aptsStorage calendar.AppointmentStorage,
+	namedaysStorage calendar.NamedayStorage,
 	cities []string,
 ) *Server {
 	return &Server{
-		state: NewState(fetcher, bdaysStorage, aptsStorage, cities),
+		state: NewState(fetcher, bdaysStorage, aptsStorage, namedaysStorage, cities),
 	}
 }
 
@@ -50,6 +51,11 @@ func (s *Server) Start() error {
 	http.HandleFunc("GET /appointments", s.appointmentsHandler)
 	http.HandleFunc("POST /api/appointments", s.handleCreateAppointment)
 	http.HandleFunc("DELETE /api/appointments/{appointmentID}", s.handleDeleteAppointment)
+
+	// namedays routes
+	http.HandleFunc("GET /namedays", s.namedaysHandler)
+	http.HandleFunc("POST /api/namedays", s.handleCreateNameday)
+	http.HandleFunc("DELETE /api/namedays/{namedayID}", s.handleDeleteNameday)
 
 	// cities route
 	http.HandleFunc("GET /city/next", s.changeCityHandler)

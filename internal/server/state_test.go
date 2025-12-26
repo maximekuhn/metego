@@ -59,6 +59,7 @@ func TestNextCity(t *testing.T) {
 				nil,
 				nil,
 				nil,
+				nil,
 				test.cities,
 			)
 			nextCity := state.nextCity(test.currentCity)

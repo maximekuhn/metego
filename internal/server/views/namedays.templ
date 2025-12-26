@@ -1,0 +1,73 @@
+package views
+
+import (
+	"fmt"
+	"github.com/maximekuhn/metego/internal/calendar"
+)
+
+templ Namedays(ndays []*calendar.Nameday) {
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<title>METEGO</title>
+			<meta charset="UTF-8"/>
+			<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+		</head>
+		<body>
+			<h1>Namedays admin</h1>
+			<h2>Add a nameday</h2>
+			@CreateNamedayForm()
+			<h2>All namedays</h2>
+			for _, nday := range ndays {
+				@NamedayCard(nday)
+			}
+		</body>
+	</html>
+}
+
+templ NamedayCard(nday *calendar.Nameday) {
+	<div>
+		<ul>
+			<li>
+				{ nday.Name }
+				{ fmt.Sprintf("%d", nday.Date.Day) } { nday.Date.Month.String() }
+				<form hx-delete={ fmt.Sprintf("/api/namedays/%d", nday.ID) } hx-swap="none" id={ fmt.Sprintf("form-delete-nameday-%d", nday.ID) }>
+					<button type="submit">Delete</button>
+				</form>
+			</li>
+		</ul>
+		<script>
+            var deleteForms = document.querySelectorAll("[id^=form-delete-nameday]")
+            for (deleteForm of deleteForms) {
+                deleteForm.addEventListener('htmx:afterRequest', function(event) { if (event.detail.successful) { location.reload(); } });
+            }
+        </script>
+	</div>
+}
+
+templ CreateNamedayForm() {
+	<div>
+		<form hx-post="/api/namedays" hx-swap="none" id="form-create-nameday">
+			<label for="name">Name:</label>
+			<input type="text" id="name" name="name" required/>
+			<br/>
+			<br/>
+			<label for="day">Day:</label>
+			<input type="number" min="1" max="31" id="day" name="day" required/>
+			<br/>
+			<br/>
+			<label for="month">Month:</label>
+			<input type="number" min="1" max="12" id="month" name="month" required/>
+			<br/>
+			<br/>
+			<button type="submit">Submit</button>
+		</form>
+		<script>
+            document.getElementById("form-create-nameday").addEventListener("htmx:afterSwap", function(event) {
+                if (event.detail.xhr.status === 200) {
+                    window.location.reload();
+                }
+            });
+        </script>
+	</div>
+}

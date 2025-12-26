@@ -85,8 +85,9 @@ func main() {
 	}
 
 	aptsStorage := sqlite.NewSQLiteAppointmentStorage(db)
+	namedaysStorage := sqlite.NewSQLiteNamedayStorage(db)
 
-	server := server.NewServer(fetcher, bdaysStorage, aptsStorage, cities)
+	server := server.NewServer(fetcher, bdaysStorage, aptsStorage, namedaysStorage, cities)
 	if err := server.Start(); err != nil {
 		fmt.Println(err)
 	}

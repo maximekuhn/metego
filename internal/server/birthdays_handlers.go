@@ -104,7 +104,16 @@ func (s *Server) handleGetTodayBirthdays(w http.ResponseWriter, r *http.Request)
 	}
 	slog.Info("appointments", slog.Int("count", len(apts)))
 
-	calendarEvents := views.CalendarEvents(birhtdays, apts)
+	// TODO: move this somewhere else
+	nameday, found, err := s.state.namedaysStorage.GetForDate(r.Context(), month, uint8(day))
+	if err != nil {
+		slog.Error("failed to get today nameday", slog.String("err_msg", err.Error()))
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	slog.Info("nameday", slog.Bool("found", found))
+
+	calendarEvents := views.CalendarEvents(birhtdays, apts, nameday)
 	w.Header().Add("Content-Type", "text/html")
 
 	err = calendarEvents.Render(r.Context(), w)

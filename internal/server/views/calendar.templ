@@ -6,16 +6,16 @@ import (
 	"strings"
 )
 
-templ Calendar(birthdays []*calendar.Birthday, appointments []*calendar.Appointment) {
+templ Calendar(birthdays []*calendar.Birthday, appointments []*calendar.Appointment, nameday *calendar.Nameday) {
 	// load events every 5 minutes
 	<div hx-get={ fmt.Sprintf("/api/birthdays") } hx-trigger="load, every 300s" hx-swap="innerHTML">
-		@CalendarEvents(birthdays, appointments)
+		@CalendarEvents(birthdays, appointments, nameday)
 	</div>
 }
 
-templ CalendarEvents(birthdays []*calendar.Birthday, appointments []*calendar.Appointment) {
+templ CalendarEvents(birthdays []*calendar.Birthday, appointments []*calendar.Appointment, nameday *calendar.Nameday) {
 	<div id="calendar-events">
-		if (birthdays == nil || len(birthdays) == 0) && (appointments == nil || len(appointments) == 0) {
+		if (birthdays == nil || len(birthdays) == 0) && (appointments == nil || len(appointments) == 0) && nameday == nil {
 			<p>
 				Pas d'évènement aujourd'hui...
 			</p>
@@ -30,6 +30,12 @@ templ CalendarEvents(birthdays []*calendar.Birthday, appointments []*calendar.Ap
 						<span>--</span>
 					}
 					<span>{ createAppointmentsString(appointments) }</span>
+				}
+				if nameday != nil {
+					if len(birthdays) > 0 || len(appointments) > 0 {
+						<span>--</span>
+					}
+					<span>{ createNamedayString(nameday) }</span>
 				}
 			</p>
 		}
@@ -51,4 +57,8 @@ func createAppointmentsString(appointments []*calendar.Appointment) string {
 		apts = append(apts, fmt.Sprintf("%s à %02dh%02d", apt.Name, apt.Date.Hour(), apt.Date.Minute()))
 	}
 	return strings.Join(apts, " ")
+}
+
+func createNamedayString(nameday *calendar.Nameday) string {
+	return fmt.Sprintf("Fête %s", nameday.Name)
 }

@@ -6,23 +6,26 @@ import (
 )
 
 type state struct {
-	fetcher      weather.Fetcher
-	bdaysStorage calendar.BirhtdayStorage
-	aptsStorage  calendar.AppointmentStorage
-	cities       []string
+	fetcher         weather.Fetcher
+	bdaysStorage    calendar.BirhtdayStorage
+	aptsStorage     calendar.AppointmentStorage
+	namedaysStorage calendar.NamedayStorage
+	cities          []string
 }
 
 func NewState(
 	fetcher weather.Fetcher,
 	bdaysStorage calendar.BirhtdayStorage,
 	aptsStorage calendar.AppointmentStorage,
+	namedayStorage calendar.NamedayStorage,
 	cities []string,
 ) *state {
 	return &state{
-		fetcher:      fetcher,
-		bdaysStorage: bdaysStorage,
-		aptsStorage:  aptsStorage,
-		cities:       cities,
+		fetcher:         fetcher,
+		bdaysStorage:    bdaysStorage,
+		aptsStorage:     aptsStorage,
+		namedaysStorage: namedayStorage,
+		cities:          cities,
 	}
 }
 
