@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/maximekuhn/metego/internal/calendar"
-	"github.com/maximekuhn/metego/internal/weather"
 )
 
 type Server struct {
@@ -19,14 +18,14 @@ type Server struct {
 // For instance, cities can be: ["Paris", "Berlin"].
 // If the app is running and the user click on "Paris", it will switch to "Berlin"
 func NewServer(
-	fetcher weather.Fetcher,
+	weatherProviders []WeatherProvider,
 	bdaysStorage calendar.BirhtdayStorage,
 	aptsStorage calendar.AppointmentStorage,
 	namedaysStorage calendar.NamedayStorage,
 	cities []string,
 ) *Server {
 	return &Server{
-		state: NewState(fetcher, bdaysStorage, aptsStorage, namedaysStorage, cities),
+		state: NewState(weatherProviders, bdaysStorage, aptsStorage, namedaysStorage, cities),
 	}
 }
 
@@ -40,6 +39,7 @@ func (s *Server) Start() error {
 	http.HandleFunc("GET /api/weather/current/", s.currentWeatherHandler)
 	http.HandleFunc("GET /api/weather/current/metrics", s.currentMetricsWeatherHandler)
 	http.HandleFunc("GET /api/weather/forecast/", s.handleGetForecastWeather)
+	http.HandleFunc("GET /api/weather/current-provider", s.handleGetCurrentProviderInfo)
 
 	// birthdays routes
 	http.HandleFunc("GET /birthdays", s.birthdaysHandler)
