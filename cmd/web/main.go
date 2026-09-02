@@ -47,7 +47,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	weatherProviders := buildWeatherProviers()
+	weatherProviders := buildWeatherProviders()
 
 	conf, err := readConfig()
 	var cities []string
