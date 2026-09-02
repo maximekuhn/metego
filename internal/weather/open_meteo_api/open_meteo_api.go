@@ -88,7 +88,7 @@ func (f *OpenMeteoFetcher) fetchCityCoords(cityName string) (*coords, error) {
 			err,
 		)
 	}
-	defer res.Body.Close()
+	defer func() { _ = res.Body.Close() }()
 
 	if res.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf(
@@ -165,7 +165,7 @@ func (f *OpenMeteoFetcher) getWeatherResponse(city string) (*weatherResponse, er
 			err,
 		)
 	}
-	defer res.Body.Close()
+	defer func() { _ = res.Body.Close() }()
 
 	if res.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf(
