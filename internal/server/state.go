@@ -76,6 +76,12 @@ func (s *state) currentWeatherProvider() WeatherProvider {
 	return s.weatherProviders[s.currProviderIdx]
 }
 
+func (s *state) updateWeatherProvider() {
+	s.currProviderMu.Lock()
+	defer s.currProviderMu.Unlock()
+	s.currProviderIdx = (s.currProviderIdx + 1) % len(s.weatherProviders)
+}
+
 type WeatherProvider struct {
 	weather.Fetcher
 	SourceName string

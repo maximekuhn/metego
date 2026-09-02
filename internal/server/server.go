@@ -39,7 +39,9 @@ func (s *Server) Start() error {
 	http.HandleFunc("GET /api/weather/current/", s.currentWeatherHandler)
 	http.HandleFunc("GET /api/weather/current/metrics", s.currentMetricsWeatherHandler)
 	http.HandleFunc("GET /api/weather/forecast/", s.handleGetForecastWeather)
+	http.HandleFunc("GET /weather-provider", s.handleGetWeatherProviderAdminPage)
 	http.HandleFunc("GET /api/weather/current-provider", s.handleGetCurrentProviderInfo)
+	http.HandleFunc("POST /api/weather/next-provider", s.handleUpdateProvider)
 
 	// birthdays routes
 	http.HandleFunc("GET /birthdays", s.birthdaysHandler)

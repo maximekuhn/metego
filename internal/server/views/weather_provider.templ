@@ -1,0 +1,36 @@
+package views
+
+import "github.com/maximekuhn/metego/internal/server/views/models"
+
+templ WeatherProviderAdminPage(curr models.WeatherProvider) {
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<title>METEGO</title>
+			<meta charset="UTF-8"/>
+			<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+		</head>
+		<body>
+			<h1>Weather provider</h1>
+            @WeatherProviderAdmin(curr)
+		</body>
+	</html>
+}
+
+templ WeatherProviderAdmin(provider models.WeatherProvider) {
+	<div id="weather-provider-admin">
+		<p>
+            Current provider:
+            <strong>{ provider.SourceName }</strong>
+		</p>
+
+		<button
+			type="button"
+			hx-post="/api/weather/next-provider"
+			hx-target="#weather-provider-admin"
+			hx-swap="outerHTML"
+		>
+			Next
+		</button>
+	</div>
+}

@@ -9,6 +9,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/maximekuhn/metego/internal/calendar/sqlite"
 	"github.com/maximekuhn/metego/internal/server"
+	openmeteoapi "github.com/maximekuhn/metego/internal/weather/open_meteo_api"
 	openweatherapi "github.com/maximekuhn/metego/internal/weather/open_weather_api"
 	yaml "gopkg.in/yaml.v3"
 )
@@ -46,11 +47,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	apiKey := os.Getenv("OPEN_WEATHER_API_KEY")
-	if len(apiKey) == 0 {
-		panic("OPEN_WEATHER_API_KEY is empty")
-	}
-	fetcher := openweatherapi.NewOpenWeatherFetcher(apiKey)
+	weatherProviders := buildWeatherProviers()
 
 	conf, err := readConfig()
 	var cities []string
@@ -87,8 +84,28 @@ func main() {
 	aptsStorage := sqlite.NewSQLiteAppointmentStorage(db)
 	namedaysStorage := sqlite.NewSQLiteNamedayStorage(db)
 
-	server := server.NewServer(fetcher, bdaysStorage, aptsStorage, namedaysStorage, cities)
+	server := server.NewServer(weatherProviders, bdaysStorage, aptsStorage, namedaysStorage, cities)
 	if err := server.Start(); err != nil {
 		fmt.Println(err)
 	}
+}
+
+func buildWeatherProviers() []server.WeatherProvider {
+	apiKey := os.Getenv("OPEN_WEATHER_API_KEY")
+	if len(apiKey) == 0 {
+		panic("OPEN_WEATHER_API_KEY is empty")
+	}
+	openWeather := server.WeatherProvider{
+		Fetcher:    openweatherapi.NewOpenWeatherFetcher(apiKey),
+		SourceName: "Open Weather Map",
+		URL:        "https://openweathermap.org/",
+	}
+
+	openMeteo := server.WeatherProvider{
+		Fetcher:    openmeteoapi.NewOpenMeteoFetcher(),
+		SourceName: "Open-Meteo.com",
+		URL:        "https://open-meteo.com/",
+	}
+
+	return []server.WeatherProvider{openWeather, openMeteo}
 }
