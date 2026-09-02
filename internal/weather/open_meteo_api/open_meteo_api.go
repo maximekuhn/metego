@@ -3,9 +3,11 @@ package openmeteoapi
 import (
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"sync"
+	"time"
 
 	"github.com/maximekuhn/metego/internal/weather"
 )
@@ -23,27 +25,9 @@ func NewOpenMeteoFetcher() *OpenMeteoFetcher {
 }
 
 func (f *OpenMeteoFetcher) FetchCurrent(city string) (*weather.CurrentWeather, error) {
-	coords, err := f.getCityCoords(city)
+	resp, err := f.getWeatherResponse(city)
 	if err != nil {
-		return nil, fmt.Errorf("openmeteoapi: could not fetch coords: %w", err)
-	}
-
-	url := fmt.Sprintf(
-		"https://api.open-meteo.com/v1/forecast?latitude=%.2f&longitude=%.2f&daily=sunrise,sunset,temperature_2m_max,temperature_2m_min,precipitation_probability_max&hourly=wind_speed_10m,surface_pressure,weather_code,temperature_2m&current=temperature_2m,wind_speed_10m,weather_code,surface_pressure,relative_humidity_2m,is_day&timezone=%s&timeformat=unixtime",
-		coords.lat,
-		coords.lon,
-		url.QueryEscape("Europe/Berlin"),
-	)
-
-	res, err := http.Get(url)
-	if err != nil {
-		return nil, fmt.Errorf("openmeteoapi: could not fetch weather: %w", err)
-	}
-	defer res.Body.Close()
-
-	var resp weatherResponse
-	if err := json.NewDecoder(res.Body).Decode(&resp); err != nil {
-		return nil, fmt.Errorf("openmeteoapi: failed to deserialize response: %w", err)
+		return nil, fmt.Errorf("openmeteoapi: failed to fetch weather: %w", err)
 	}
 
 	if len(resp.Daily.Sunset) < 1 || len(resp.Daily.Sunrise) < 1 {
@@ -63,7 +47,29 @@ func (f *OpenMeteoFetcher) FetchCurrent(city string) (*weather.CurrentWeather, e
 }
 
 func (f *OpenMeteoFetcher) FetchForecast(city string, days int) ([]*weather.ForecastWeather, error) {
-	panic("TODO")
+	resp, err := f.getWeatherResponse(city)
+	if err != nil {
+		return nil, fmt.Errorf("openmeteoapi: failed to fetch weather: %w", err)
+	}
+
+	if len(resp.Daily.Time)-1 < days {
+		slog.Warn("forecast has missing days", "requested", days, "got", len(resp.DailyUnits.Time)-1)
+	}
+
+	out := make([]*weather.ForecastWeather, 0)
+	for i := 1; i < len(resp.Daily.Time)-1; i++ {
+		// Assumes all arrays within `Daily` have the same size
+
+		date := time.Unix(resp.Daily.Time[i], 0)
+		out = append(out, &weather.ForecastWeather{
+			Date:        date,
+			HighestTemp: resp.Daily.Temperature2MMax[i],
+			LowestTemp:  resp.Daily.Temperature2MMin[i],
+			Pop:         float64(resp.Daily.PrecipitationProbability[i]),
+			Icon:        toIcon(resp.Daily.WeatherCode[i], true),
+		})
+	}
+	return out, nil
 }
 
 func (f *OpenMeteoFetcher) fetchCityCoords(cityName string) (*coords, error) {
@@ -118,6 +124,32 @@ func (f *OpenMeteoFetcher) getCityCoords(cityName string) (*coords, error) {
 	}
 	f.coords[cityName] = *c
 	return c, nil
+}
+
+func (f *OpenMeteoFetcher) getWeatherResponse(city string) (*weatherResponse, error) {
+	coords, err := f.getCityCoords(city)
+	if err != nil {
+		return nil, fmt.Errorf("openmeteoapi: could not fetch coords: %w", err)
+	}
+
+	url := fmt.Sprintf(
+		"https://api.open-meteo.com/v1/forecast?latitude=%.2f&longitude=%.2f&daily=sunrise,sunset,temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code&hourly=wind_speed_10m,surface_pressure,weather_code,temperature_2m&current=temperature_2m,wind_speed_10m,weather_code,surface_pressure,relative_humidity_2m,is_day&timezone=%s&timeformat=unixtime",
+		coords.lat,
+		coords.lon,
+		url.QueryEscape("Europe/Berlin"),
+	)
+
+	res, err := http.Get(url)
+	if err != nil {
+		return nil, fmt.Errorf("openmeteoapi: could not fetch weather: %w", err)
+	}
+	defer res.Body.Close()
+
+	var resp weatherResponse
+	if err := json.NewDecoder(res.Body).Decode(&resp); err != nil {
+		return nil, fmt.Errorf("openmeteoapi: failed to deserialize response: %w", err)
+	}
+	return &resp, nil
 }
 
 func toIcon(weatherCode int, isDay bool) weather.CurrentWeatherIcon {
@@ -335,6 +367,8 @@ type dailyUnits struct {
 }
 
 type daily struct {
+	Time                     []int64   `json:"time"`
+	WeatherCode              []int     `json:"weather_code"`
 	Sunrise                  []int64   `json:"sunrise"`
 	Sunset                   []int64   `json:"sunset"`
 	Temperature2MMax         []float64 `json:"temperature_2m_max"`
