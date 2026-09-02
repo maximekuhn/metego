@@ -90,7 +90,7 @@ func main() {
 	}
 }
 
-func buildWeatherProviers() []server.WeatherProvider {
+func buildWeatherProviders() []server.WeatherProvider {
 	apiKey := os.Getenv("OPEN_WEATHER_API_KEY")
 	if len(apiKey) == 0 {
 		panic("OPEN_WEATHER_API_KEY is empty")
