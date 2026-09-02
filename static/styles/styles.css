@@ -168,6 +168,13 @@ body {
 }
 /* Section end: forecast weather */
 
+/* Section start: current weather provider info */
+#weather-provider-info {
+    margin-left: 20px;
+}
+
+/* Section end: current weather provider info */
+
 /* Section start: calendar events*/
 #today-events {
     position: fixed;

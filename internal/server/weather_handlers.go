@@ -6,6 +6,8 @@ import (
 	"strconv"
 
 	"github.com/maximekuhn/metego/internal/server/views"
+	"github.com/maximekuhn/metego/internal/server/views/models"
+	openmeteoapi "github.com/maximekuhn/metego/internal/weather/open_meteo_api"
 )
 
 // GET /weather/{city}
@@ -25,7 +27,8 @@ func (s *Server) weatherHandler(w http.ResponseWriter, r *http.Request) {
 func (s *Server) currentWeatherHandler(w http.ResponseWriter, r *http.Request) {
 	city := r.URL.Query().Get("city")
 	slog.Info("GET /api/weather/current", slog.String("city", city))
-	currentWeather, err := s.state.fetcher.FetchCurrent(city)
+	// currentWeather, err := s.state.fetcher.FetchCurrent(city)
+	currentWeather, err := openmeteoapi.NewOpenMeteoFetcher().FetchCurrent(city)
 	if err != nil {
 		slog.Error("failed to get current weather", slog.String("err_msg", err.Error()))
 		// TODO: check err, maybe it's the user's fault
@@ -45,7 +48,7 @@ func (s *Server) currentWeatherHandler(w http.ResponseWriter, r *http.Request) {
 func (s *Server) currentMetricsWeatherHandler(w http.ResponseWriter, r *http.Request) {
 	city := r.URL.Query().Get("city")
 	slog.Info("GET /api/weather/current/metrics", slog.String("city", city))
-	currentWeather, err := s.state.fetcher.FetchCurrent(city)
+	currentWeather, err := s.state.currentWeatherProvider().FetchCurrent(city)
 	if err != nil {
 		slog.Error("failed to get current weather", slog.String("err_msg", err.Error()))
 		// TODO: check err, maybe it's the user's fault
@@ -78,7 +81,7 @@ func (s *Server) handleGetForecastWeather(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	forecasts, err := s.state.fetcher.FetchForecast(city, int(d))
+	forecasts, err := s.state.currentWeatherProvider().FetchForecast(city, int(d))
 	if err != nil {
 		slog.Error("failed to get forecast weather", slog.String("err_msg", err.Error()))
 		// TODO: check err, maybe it's the user's fault
@@ -92,5 +95,35 @@ func (s *Server) handleGetForecastWeather(w http.ResponseWriter, r *http.Request
 	err = forecastWeatherComp.Render(r.Context(), w)
 	if err != nil {
 		slog.Error("failed to render ForecastWeatherComp", slog.String("err_msg", err.Error()))
+	}
+}
+
+// GET /api/weather/current-provider
+func (s *Server) handleGetCurrentProviderInfo(w http.ResponseWriter, r *http.Request) {
+	if err := views.WeatherProviderInfo(getCurrentProviderInfo(s.state)).Render(r.Context(), w); err != nil {
+		slog.Error("failed to render WeatherProviderInfo", slog.String("err_msg", err.Error()))
+	}
+}
+
+// GET /weather-provider
+func (s *Server) handleGetWeatherProviderAdminPage(w http.ResponseWriter, r *http.Request) {
+	if err := views.WeatherProviderAdminPage(getCurrentProviderInfo(s.state)).Render(r.Context(), w); err != nil {
+		slog.Error("failed to render WeatherProviderAdminPage", slog.String("err_msg", err.Error()))
+	}
+}
+
+// POST /api/weather/next-provider
+func (s *Server) handleUpdateProvider(w http.ResponseWriter, r *http.Request) {
+	s.state.updateWeatherProvider()
+	if err := views.WeatherProviderAdmin(getCurrentProviderInfo(s.state)).Render(r.Context(), w); err != nil {
+		slog.Error("failed to render WeatherProviderAdmin", slog.String("err_msg", err.Error()))
+	}
+}
+
+func getCurrentProviderInfo(state *state) models.WeatherProvider {
+	currProvider := state.currentWeatherProvider()
+	return models.WeatherProvider{
+		SourceName: currProvider.SourceName,
+		URL:        currProvider.URL,
 	}
 }

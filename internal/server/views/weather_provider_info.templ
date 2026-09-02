@@ -1,0 +1,23 @@
+package views
+
+import "github.com/maximekuhn/metego/internal/server/views/models"
+
+templ WeatherProvider() {
+	// load weather provider info every 5 minutes
+	<div hx-get="/api/weather/current-provider" hx-trigger="load, every 300s" hx-swap="innerHTML">
+        Loading weather provider info...
+	</div>
+}
+
+templ WeatherProviderInfo(provider models.WeatherProvider) {
+	<p class="text-sm text-gray-500">
+		Weather data source:
+		<a
+			href={ templ.SafeURL(provider.URL) }
+			target="_blank"
+			rel="noopener noreferrer"
+		>
+			{ provider.SourceName }
+		</a>
+	</p>
+}

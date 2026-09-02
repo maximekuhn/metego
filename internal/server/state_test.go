@@ -1,6 +1,8 @@
 package server
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestNextCity(t *testing.T) {
 	tests := []struct {
@@ -56,7 +58,13 @@ func TestNextCity(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.title, func(t *testing.T) {
 			state := NewState(
-				nil,
+				[]WeatherProvider{
+					{
+						Fetcher:    nil,
+						SourceName: "",
+						URL:        "",
+					},
+				},
 				nil,
 				nil,
 				nil,
