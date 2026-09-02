@@ -158,3 +158,15 @@ Add the cron job:
 
 Thats it! :)
 
+
+## Weather Provider
+The weather provider can be configured to use either **OpenWeatherMap** or **Open-Meteo**.
+
+### Attribution
+Weather data is provided by the selected provider:
+
+* **OpenWeatherMap** — © OpenWeather
+* **Open-Meteo** — Weather data by [Open-Meteo.com](https://open-meteo.com/), licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+
+Please refer to each provider's terms of service and licensing conditions when using this software.
+
