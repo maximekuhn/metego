@@ -31,7 +31,7 @@ func (f *OpenMeteoFetcher) FetchCurrent(city string) (*weather.CurrentWeather, e
 	}
 
 	if len(resp.Daily.Sunset) < 1 || len(resp.Daily.Sunrise) < 1 {
-		return nil, fmt.Errorf("openmeteoapi: no Daily sunset or sunrise")
+		return nil, fmt.Errorf("openmeteoapi: no daily sunset or sunrise")
 	}
 
 	return &weather.CurrentWeather{
@@ -53,14 +53,15 @@ func (f *OpenMeteoFetcher) FetchForecast(city string, days int) ([]*weather.Fore
 	}
 
 	if len(resp.Daily.Time)-1 < days {
-		slog.Warn("forecast has missing days", "requested", days, "got", len(resp.DailyUnits.Time)-1)
+		slog.Warn("forecast has missing days", "requested", days, "got", len(resp.Daily.Time)-1)
 	}
 
 	out := make([]*weather.ForecastWeather, 0)
-	for i := 1; i < len(resp.Daily.Time)-1; i++ {
-		// Assumes all arrays within `Daily` have the same size
 
+	for i := 1; i < len(resp.Daily.Time)-1; i++ {
+		// Assumes all arrays within Daily have the same size.
 		date := time.Unix(resp.Daily.Time[i], 0)
+
 		out = append(out, &weather.ForecastWeather{
 			Date:        date,
 			HighestTemp: resp.Daily.Temperature2MMax[i],
@@ -69,6 +70,7 @@ func (f *OpenMeteoFetcher) FetchForecast(city string, days int) ([]*weather.Fore
 			Icon:        toIcon(resp.Daily.WeatherCode[i], true),
 		})
 	}
+
 	return out, nil
 }
 
@@ -80,12 +82,19 @@ func (f *OpenMeteoFetcher) fetchCityCoords(cityName string) (*coords, error) {
 
 	res, err := http.Get(url)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get OpenMeteo/GeoCoding results for city: '%s': %w", cityName, err)
+		return nil, fmt.Errorf(
+			"failed to get OpenMeteo/GeoCoding results for city: %q: %w",
+			cityName,
+			err,
+		)
 	}
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("OpenMeteo/Geocoding: expected 200 OK, got %s", res.Status)
+		return nil, fmt.Errorf(
+			"OpenMeteo/Geocoding: expected 200 OK, got %s",
+			res.Status,
+		)
 	}
 
 	type response struct {
@@ -97,11 +106,17 @@ func (f *OpenMeteoFetcher) fetchCityCoords(cityName string) (*coords, error) {
 
 	var resp response
 	if err := json.NewDecoder(res.Body).Decode(&resp); err != nil {
-		return nil, fmt.Errorf("OpenMeteo/Geocoding: failed to deserialize response: %w", err)
+		return nil, fmt.Errorf(
+			"OpenMeteo/Geocoding: failed to deserialize response: %w",
+			err,
+		)
 	}
 
 	if len(resp.Results) != 1 {
-		return nil, fmt.Errorf("OpenMeteo/Geocoding: no result for city '%s'", cityName)
+		return nil, fmt.Errorf(
+			"OpenMeteo/Geocoding: no result for city %q",
+			cityName,
+		)
 	}
 
 	return &coords{
@@ -122,6 +137,7 @@ func (f *OpenMeteoFetcher) getCityCoords(cityName string) (*coords, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	f.coords[cityName] = *c
 	return c, nil
 }
@@ -129,11 +145,14 @@ func (f *OpenMeteoFetcher) getCityCoords(cityName string) (*coords, error) {
 func (f *OpenMeteoFetcher) getWeatherResponse(city string) (*weatherResponse, error) {
 	coords, err := f.getCityCoords(city)
 	if err != nil {
-		return nil, fmt.Errorf("openmeteoapi: could not fetch coords: %w", err)
+		return nil, fmt.Errorf(
+			"openmeteoapi: could not fetch coords: %w",
+			err,
+		)
 	}
 
 	url := fmt.Sprintf(
-		"https://api.open-meteo.com/v1/forecast?latitude=%.2f&longitude=%.2f&daily=sunrise,sunset,temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code&hourly=wind_speed_10m,surface_pressure,weather_code,temperature_2m&current=temperature_2m,wind_speed_10m,weather_code,surface_pressure,relative_humidity_2m,is_day&timezone=%s&timeformat=unixtime",
+		"https://api.open-meteo.com/v1/forecast?latitude=%.2f&longitude=%.2f&daily=sunrise,sunset,temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code&current=temperature_2m,wind_speed_10m,weather_code,surface_pressure,relative_humidity_2m,is_day&timezone=%s&timeformat=unixtime",
 		coords.lat,
 		coords.lon,
 		url.QueryEscape("Europe/Berlin"),
@@ -141,14 +160,28 @@ func (f *OpenMeteoFetcher) getWeatherResponse(city string) (*weatherResponse, er
 
 	res, err := http.Get(url)
 	if err != nil {
-		return nil, fmt.Errorf("openmeteoapi: could not fetch weather: %w", err)
+		return nil, fmt.Errorf(
+			"openmeteoapi: could not fetch weather: %w",
+			err,
+		)
 	}
 	defer res.Body.Close()
 
+	if res.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf(
+			"openmeteoapi: expected 200 OK, got %s",
+			res.Status,
+		)
+	}
+
 	var resp weatherResponse
 	if err := json.NewDecoder(res.Body).Decode(&resp); err != nil {
-		return nil, fmt.Errorf("openmeteoapi: failed to deserialize response: %w", err)
+		return nil, fmt.Errorf(
+			"openmeteoapi: failed to deserialize response: %w",
+			err,
+		)
 	}
+
 	return &resp, nil
 }
 
@@ -305,65 +338,17 @@ type coords struct {
 }
 
 type weatherResponse struct {
-	Latitude             float64 `json:"latitude"`
-	Longitude            float64 `json:"longitude"`
-	GenerationTimeMS     float64 `json:"generationtime_ms"`
-	UTCOffsetSeconds     int     `json:"utc_offset_seconds"`
-	Timezone             string  `json:"timezone"`
-	TimezoneAbbreviation string  `json:"timezone_abbreviation"`
-	Elevation            float64 `json:"elevation"`
-
-	CurrentUnits currentUnits `json:"current_units"`
-	Current      current      `json:"current"`
-
-	HourlyUnits hourlyUnits `json:"hourly_units"`
-	Hourly      hourly      `json:"hourly"`
-
-	DailyUnits dailyUnits `json:"daily_units"`
-	Daily      daily      `json:"daily"`
-}
-
-type currentUnits struct {
-	Time            string `json:"time"`
-	Interval        string `json:"interval"`
-	Temperature2M   string `json:"temperature_2m"`
-	WindSpeed10M    string `json:"wind_speed_10m"`
-	WeatherCode     string `json:"weather_code"`
-	SurfacePressure string `json:"surface_pressure"`
+	Current current `json:"current"`
+	Daily   daily   `json:"daily"`
 }
 
 type current struct {
-	Interval           int     `json:"interval"`
 	Temperature2M      float64 `json:"temperature_2m"`
 	WindSpeed10M       float64 `json:"wind_speed_10m"`
 	WeatherCode        int     `json:"weather_code"`
 	SurfacePressure    float64 `json:"surface_pressure"`
 	RelativeHumidity2M float64 `json:"relative_humidity_2m"`
 	IsDay              int     `json:"is_day"`
-}
-
-type hourlyUnits struct {
-	Time            string `json:"time"`
-	WindSpeed10M    string `json:"wind_speed_10m"`
-	SurfacePressure string `json:"surface_pressure"`
-	WeatherCode     string `json:"weather_code"`
-	Temperature2M   string `json:"temperature_2m"`
-}
-
-type hourly struct {
-	WindSpeed10M    []float64 `json:"wind_speed_10m"`
-	SurfacePressure []float64 `json:"surface_pressure"`
-	WeatherCode     []int     `json:"weather_code"`
-	Temperature2M   []float64 `json:"temperature_2m"`
-}
-
-type dailyUnits struct {
-	Time                     string `json:"time"`
-	Sunrise                  string `json:"sunrise"`
-	Sunset                   string `json:"sunset"`
-	Temperature2MMax         string `json:"temperature_2m_max"`
-	Temperature2MMin         string `json:"temperature_2m_min"`
-	PrecipitationProbability string `json:"precipitation_probability_max"`
 }
 
 type daily struct {
